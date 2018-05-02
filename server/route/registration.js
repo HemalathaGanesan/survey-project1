@@ -2,22 +2,33 @@ const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
+const registration = require('../models/registration.js')
 
 // get request
-router.get('/', (req, res) => {
-  res.send("jaffa na jaffada")
+router.get('/reg', (req, res) => {
+  // res.send('dasd')
+  registration.find({})
+    .then(data => res.send(data))
+});
+
+router.get('/reg/:id', (req, res) => {
+  // res.send('dasd')
+  registration.find({ email: req.params.id })
+    .then(data => res.send(data))
 });
 
 // post request
 router.post('/registration', (req, res) => {
-  const data = req.body;
-  // console.log(data);
+  var data = req.body;
+  // console.log("old data", data);
 
   //encrypt password using bcrypt
   bcrypt.genSalt(10, function (err, salt) {
-    bcrypt.hash(data.password, salt, function (err, hash) {
+    bcrypt.hash(req.body.password, salt, function (err, hash) {
       // Store hash in your password DB.
-      // console.log(hash)
+      data.password = hash;
+      // console.log('new data',data)
+      registration.insertMany(data)
     });
   });
 

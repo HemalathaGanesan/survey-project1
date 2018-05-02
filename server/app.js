@@ -25,7 +25,9 @@ app.use(cors())
 // });
 
 // use routes
-app.use('/api', require('./route/api.js'))
+app.use('/api', require('./route/registration.js'));
+app.use('/api', require('./route/login.js'));
+
 
 // server listening
 app.listen(3001, () => console.log("server started"))

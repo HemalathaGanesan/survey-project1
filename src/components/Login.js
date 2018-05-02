@@ -10,11 +10,13 @@ class Login extends Component {
 
   storeData(e) {
     e.preventDefault();
-    // let data = {
-    //   email: this.refs.email.value,
-    //   password: this.refs.password.value,
-    // }
+    let data = {
+      email: this.refs.email.value,
+      password: this.refs.password.value,
+    }
     // console.log(data)
+    this.getReq(data);
+
     this.props.dispatch({
       type: 'LOGIN_DATA',
       payload: {
@@ -22,21 +24,58 @@ class Login extends Component {
         password: this.refs.password.value
       }
     });
-
-    // fetch("http://localhost:3001/api/login/", {
-    //   body: JSON.stringify(data),
-    //   headers: new Headers({
-    //     'Content-Type': 'application/json'
-    //   }),
-    //   method: 'POST'
-    // }).then(res => res.json())
-    //   .then(data => console.log(data))
-    //   .catch(error => console.log(error));
-    
-    // this.setState({ isMailSent: true })
-    // setTimeout(() => this.setState({ isMailSent: false }), 5000)
-    // this.refs.loginForm.reset();
+    this.postReq(data);
   }
+
+  getReq(data) {
+    fetch("http://localhost:3001/api/login/", {
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      method: 'GET'
+    }).then(res => res.json())
+      .then(data => console.log(data))
+      .catch(error => console.log(error));
+  }
+
+  postReq(data) {
+    fetch("http://localhost:3001/api/login/", {
+      body: JSON.stringify(data),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      method: 'POST'
+    }).then(res => res.json())
+      .then(data => console.log(data))
+      .catch(error => console.log(error));
+
+    this.setState({ isMailSent: true })
+    setTimeout(() => this.setState({ isMailSent: false }), 5000)
+    this.refs.loginForm.reset();
+  }
+
+  // validatePass(e) {
+  //   console.log(this.refs.password.value);
+  //   if (this.refs.password.value === '') {
+  //     this.setState({ isValidPass1: false, isValidPass2: false, isValidPass3: false });
+  //   } else if (this.refs.password.value.length < 8) {
+  //     this.setState({
+  //       isValidPass1: true, isValidPass2: false, isValidPass3: false
+  //     })
+  //   } else if (!this.refs.password.value.match(/[A-Z]/)) {
+  //     this.setState({
+  //       isValidPass2: true, isValidPass3: false, isValidPass1: false
+  //     })
+  //   } else if (!this.refs.password.value.match(/[0-9]/)) {
+  //     this.setState({
+  //       isValidPass3: true, isValidPass1: false, isValidPass2: false
+  //     })
+  //   } else {
+  //     this.setState({
+  //       isValidPass1: false, isValidPass2: false, isValidPass3: false
+  //     })
+  //   }
+  // }
 
   render() {
     return (
