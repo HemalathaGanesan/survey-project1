@@ -147,7 +147,10 @@ class Registration extends Component {
                       <input type="text" className="form-control" id="hospital" ref="hospital" placeholder="Hospital" required />
                     </div>
                   </div>
-                  <button type="submit" className="btn btn-primary">Register</button>
+                  <div>
+                    <a href="http://localhost:3001/api/registration/auth/google" className="google-button">Google</a>
+                    <button type="submit" className="btn btn-primary" style={{float:"right"}}>Register</button>
+                  </div>
                 </form>
 
               </div>
@@ -157,6 +160,7 @@ class Registration extends Component {
             {this.state.isMailSent2 && <div className="alert alert-danger" role="alert">{this.state.isMailExists}</div>}
           </div>
           <div className="col"></div>
+
         </div>
       </div>
     )

@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-const registration = require('../models/registration.js')
+const registration = require('../models/registration.js');
+const passport = require('passport')
 
 // get request
 router.get('/', (req, res) => {
@@ -15,10 +16,24 @@ router.get('/:email', (req, res) => {
     .then(data => res.send(data))
 });
 
+router.get('/auth/google', passport.authenticate('google', {
+  scope: ['profile', 'email']
+})
+);
+
+router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {
+  if (req.user.hospital) {
+    res.redirect("http://localhost:3000/Dashboard");
+  } else {
+    res.redirect(`http://localhost:3000/RegisterWithGoogle/${req.user._id}`)
+
+  }
+})
+
 
 // post request
 router.post('/', (req, res) => {
-  // var data = req.body;
+  var data = req.body;
   // console.log("old data", data);
 
   registration.find({ email: req.body.email })
@@ -46,7 +61,7 @@ router.post('/', (req, res) => {
               register.save()
                 .then(result => {
                   res.json({
-                    message: "registed succesfully"
+                    message: "registered succesfully"
                   })
                 })
                 .catch(err => {
@@ -101,5 +116,33 @@ router.post('/', (req, res) => {
       }
     })
 });
+
+
+router.put('/:googleId', (req, response) => {
+  console.log(req.body);
+
+  registration.findOne({ _id: req.params.googleId })
+    .then(data => {
+      console.log("put req", data)
+      if (data.hospital) {
+        response.json({
+          message: "failed",
+          isRedirect: false
+        })
+        // response.redirect("http://localhost:3000/Dashboard")
+
+      } else {
+        registration.findByIdAndUpdate({ _id: req.params.googleId }, req.body)
+          .then(result => {
+            response.send({
+              message: "account updated",
+              isRedirect: true
+            })
+            // response.redirect("http://localhost:3000/login")
+          })
+      }
+    })
+
+})
 
 module.exports = router;

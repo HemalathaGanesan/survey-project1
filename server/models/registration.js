@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const registrationSchema = mongoose.Schema({
   email: String,
   password: String,
+  googleId: String,
   hospital: String
 })
 

@@ -2,9 +2,25 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const passportSetup = require('./config/passport-setup');
+const keys = require('./config/keys')
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+
 
 // express app
 const app = express();
+
+//cookie time-limit
+app.use(cookieSession({
+ maxAge: 60*1000,
+ keys:[keys.session.cookieKey]
+}));
+
+//initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // connect to mongodb
 mongoose.connect('mongodb://localhost/survey_project');
@@ -27,7 +43,6 @@ app.use(cors())
 // use routes
 app.use('/api/registration', require('./route/registration.js'));
 app.use('/api/login', require('./route/login.js'));
-app.use('/api/dashboard', require('./route/dashboard.js'));
 
 
 // server listening

@@ -103,7 +103,7 @@ class Login extends Component {
                       {/* <small><p className="text-left">password should atleast 8 characters include </p></small> */}
                     </div>
                   </div>
-
+                  <a href="http://localhost:3001/api/registration/auth/google" className="google-button">Google</a>
                   <Link to="/dashboard"><button type="submit" className="btn btn-primary">Login</button></Link>
                 </form>
 

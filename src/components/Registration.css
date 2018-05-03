@@ -6,3 +6,11 @@
   margin: auto;
   width: 50%;
 } */
+
+.google-button{
+  float: left;
+  font-size: x-large;
+  border: 1px solid;
+  padding: 3px;
+  border-radius: 4px;
+}
