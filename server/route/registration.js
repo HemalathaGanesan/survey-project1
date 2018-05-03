@@ -8,12 +8,14 @@ const passport = require('passport')
 // get request
 router.get('/', (req, res) => {
   registration.find({})
-    .then(data => res.send(data))
+    .then(data => res.json(data))
 });
 
 router.get('/:email', (req, res) => {
   registration.find({ email: req.params.email })
-    .then(data => res.send(data))
+    .then(data => {
+      res.json(data)
+    })
 });
 
 router.get('/auth/google', passport.authenticate('google', {
@@ -38,6 +40,7 @@ router.post('/', (req, res) => {
 
   registration.find({ email: req.body.email })
     .then(user => {
+      console.log("user", user)
       if (user.length >= 1) {
         return res.json({
           message: "mail already exists",
@@ -60,6 +63,46 @@ router.post('/', (req, res) => {
               })
               register.save()
                 .then(result => {
+                  console.log("result", result)
+
+                  // send confirmation mail 
+                  const url = `http://localhost:3000/verifyUser/${result._id}`;
+                  const mailAccount = {
+                    user: 'test.skiploop@gmail.com',
+                    password: 'Test@123',
+                  }
+
+                  nodemailer.createTestAccount((err, account) => {
+                    let transporter = nodemailer.createTransport({
+                      host: 'smtp.gmail.com',
+                      port: 587,
+                      secure: false,
+                      auth: {
+                        user: mailAccount.user,
+                        pass: mailAccount.password
+                      }
+                    });
+
+                    let mailOptions = {
+                      from: `"Confirm mail" <${account.user}>`,
+                      to: req.body.email,
+                      subject: 'Confirm Email',
+                      // text: 'Hello, click below link to confirm !!',
+                      html: `hello!! Please click this link to confirm your email: <a href="${url}">${url}</a>`,
+                    };
+
+                    transporter.sendMail(mailOptions, (error, info) => {
+                      if (error) {
+                        return console.log(error);
+                      }
+                      console.log('Message sent: %s', info.messageId);
+                      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+                      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+                      // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+                    });
+                  })
+
                   res.json({
                     message: "registered succesfully"
                   })
@@ -69,47 +112,6 @@ router.post('/', (req, res) => {
                     error: err
                   })
                 })
-
-
-              // send confirmation mail 
-
-              // const url = `http://localhost:3000/confirmation/${emailToken}`;
-              const url = `http://localhost:3000/login/`;
-              const mailAccount = {
-                user: 'test.skiploop@gmail.com',
-                password: 'Test@123',
-              }
-
-              nodemailer.createTestAccount((err, account) => {
-                let transporter = nodemailer.createTransport({
-                  host: 'smtp.gmail.com',
-                  port: 587,
-                  secure: false,
-                  auth: {
-                    user: mailAccount.user,
-                    pass: mailAccount.password
-                  }
-                });
-
-                let mailOptions = {
-                  from: `"Confirm mail" <${account.user}>`,
-                  to: req.body.email,
-                  subject: 'Confirm Email',
-                  // text: 'Hello, click below link to confirm !!',
-                  html: `hello!! Please click this link to confirm your email: <a href="${url}">${url}</a>`,
-                };
-
-                transporter.sendMail(mailOptions, (error, info) => {
-                  if (error) {
-                    return console.log(error);
-                  }
-                  console.log('Message sent: %s', info.messageId);
-                  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-
-                  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-                  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-                });
-              })
             }
           });
         });
@@ -118,10 +120,10 @@ router.post('/', (req, res) => {
 });
 
 
-router.put('/:googleId', (req, response) => {
+router.put('/:userId', (req, response) => {
   console.log(req.body);
 
-  registration.findOne({ _id: req.params.googleId })
+  registration.findOne({ _id: req.params.userId })
     .then(data => {
       console.log("put req", data)
       if (data.hospital) {
@@ -132,7 +134,7 @@ router.put('/:googleId', (req, response) => {
         // response.redirect("http://localhost:3000/Dashboard")
 
       } else {
-        registration.findByIdAndUpdate({ _id: req.params.googleId }, req.body)
+        registration.findByIdAndUpdate({ _id: req.params.userId }, req.body)
           .then(result => {
             response.send({
               message: "account updated",
@@ -142,7 +144,30 @@ router.put('/:googleId', (req, response) => {
           })
       }
     })
+    .catch(err => res.send(err))
+})
 
+router.put('/verifyUser/:userId', (req, res) => {
+  registration.findByIdAndUpdate({ _id: req.params.userId })
+    .then(result => {
+      console.log("result", result)
+      if (result.isVerified === false) {
+        registration.findByIdAndUpdate({ _id: req.params.userId }, { isVerified: true })
+          .then(updatedResult => {
+            console.log("updatedresult", updatedResult)
+          })
+        res.json({
+          message: "user verifed susscfully",
+          success: true
+        })
+      } else {
+        res.json({
+          message: "user already verifed",
+          success: false
+        })
+      }
+    })
+    .catch(err => res.send(err))
 })
 
 module.exports = router;

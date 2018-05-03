@@ -23,7 +23,7 @@ class RegisterWithGoogle extends Component {
     this.putReq(data);
   }
   putReq(data) {
-    fetch(`http://localhost:3001/api/registration/${this.props.googleId}`, {
+    fetch(`http://localhost:3001/api/registration/${this.props.userId}`, {
       body: JSON.stringify(data),
       headers: new Headers({
         'Content-Type': 'application/json'
@@ -40,7 +40,7 @@ class RegisterWithGoogle extends Component {
   }
 
   render() {
-    console.log(this.props.googleId)
+    // console.log(this.props.userId)
     if (this.state.isRedirected) {
       return (
         <Dashboard />

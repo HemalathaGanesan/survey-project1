@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 class Login extends Component {
   constructor() {
     super();
-    this.state = { isMailSent: false }
+    this.state = { isVerified: false }
   }
 
   storeData(e) {
@@ -24,17 +24,27 @@ class Login extends Component {
         password: this.refs.password.value
       }
     });
-    this.postReq(data);
+    this.getReq(data);
   }
 
   getReq(data) {
-    fetch("http://localhost:3001/api/login/", {
+    // console.log(data)
+    fetch(`http://localhost:3001/api/registration/${data.email}`, {
       headers: new Headers({
         'Content-Type': 'application/json'
       }),
       method: 'GET'
     }).then(res => res.json())
-      .then(data => console.log(data))
+      .then(data => {
+        console.log(data);
+        if (data[0].isVerified === false) {
+          this.setState({ isVerified: true })
+          setTimeout(() => this.setState({ isVerified: false }), 5000)
+        } else {
+          this.setState({ isVerified: false })
+          this.props.history.push('/dashboard')
+        }
+      })
       .catch(error => console.log(error));
   }
 
@@ -53,29 +63,6 @@ class Login extends Component {
     setTimeout(() => this.setState({ isMailSent: false }), 5000)
     this.refs.loginForm.reset();
   }
-
-  // validatePass(e) {
-  //   console.log(this.refs.password.value);
-  //   if (this.refs.password.value === '') {
-  //     this.setState({ isValidPass1: false, isValidPass2: false, isValidPass3: false });
-  //   } else if (this.refs.password.value.length < 8) {
-  //     this.setState({
-  //       isValidPass1: true, isValidPass2: false, isValidPass3: false
-  //     })
-  //   } else if (!this.refs.password.value.match(/[A-Z]/)) {
-  //     this.setState({
-  //       isValidPass2: true, isValidPass3: false, isValidPass1: false
-  //     })
-  //   } else if (!this.refs.password.value.match(/[0-9]/)) {
-  //     this.setState({
-  //       isValidPass3: true, isValidPass1: false, isValidPass2: false
-  //     })
-  //   } else {
-  //     this.setState({
-  //       isValidPass1: false, isValidPass2: false, isValidPass3: false
-  //     })
-  //   }
-  // }
 
   render() {
     return (
@@ -104,13 +91,13 @@ class Login extends Component {
                     </div>
                   </div>
                   <a href="http://localhost:3001/api/registration/auth/google" className="google-button">Google</a>
-                  <Link to="/dashboard"><button type="submit" className="btn btn-primary">Login</button></Link>
+                  <button type="submit" className="btn btn-primary">Login</button>
                 </form>
 
               </div>
             </div>
             <p>Dont't have account? Register <Link to="/registration"> Here</Link></p>
-            {/* {this.state.isMailSent && <div className="alert alert-success" role="alert">Mail has been sent to your mail</div>} */}
+            {this.state.isVerified && <div className="alert alert-danger" role="alert">Mail not Verified</div>}
           </div>
           <div className="col"></div>
         </div>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Registration.css';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 class Registration extends Component {
   constructor() {
