@@ -141,8 +141,8 @@ class Registration extends Component {
                     </div>
                   </div>
                   <div>
-                    <a href="http://localhost:3001/api/registration/auth/google">Google</a>
-                    <button type="submit" className="btn btn-primary">Register</button>
+                    <a href="http://localhost:3001/api/registration/auth/google" className="google-button">Google</a>
+                    <button type="submit" className="btn btn-primary" style={{float:"right"}}>Register</button>
                   </div>
                 </form>
 

@@ -3,9 +3,24 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const passportSetup = require('./config/passport-setup');
+const keys = require('./config/keys')
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+
 
 // express app
 const app = express();
+
+//cookie time-limit
+app.use(cookieSession({
+ maxAge: 24*60*60*1000,
+ keys:[keys.session.cookieKey]
+}));
+
+//initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // connect to mongodb
 mongoose.connect('mongodb://localhost/survey_project');
