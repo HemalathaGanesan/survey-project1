@@ -21,7 +21,7 @@ class Registration extends Component {
       "hospital": this.refs.hospital.value
     }
     // console.log(data)
-  
+
     if (this.refs.confirmPassword.value.length < 8 || (this.refs.password.value !== this.refs.confirmPassword.value)) {
       this.setState({ isValidConfPass: true })
     } else {
@@ -40,7 +40,7 @@ class Registration extends Component {
   }
   postReq(data) {
     console.log(data)
-    fetch("http://localhost:3001/api/registration/", {
+    fetch("http://localhost:3001/api/registration", {
       body: JSON.stringify(data),
       headers: new Headers({
         'Content-Type': 'application/json'
@@ -58,7 +58,7 @@ class Registration extends Component {
 
   validatePass(e) {
     console.log(this.refs.password.value);
-    if(this.refs.password.value === ''){
+    if (this.refs.password.value === '') {
       this.setState({ isValidPass1: false, isValidPass2: false, isValidPass3: false });
     } else if (this.refs.password.value.length < 8) {
       this.setState({
@@ -80,7 +80,7 @@ class Registration extends Component {
   }
   validateConfPass(e) {
     console.log(this.refs.confirmPassword.value)
-    if(this.refs.confirmPassword.value !== ''){
+    if (this.refs.confirmPassword.value !== '') {
       this.setState({ isValidConfPass: false });
     } else this.setState({ isValidConfPass: false });
   }
@@ -140,7 +140,10 @@ class Registration extends Component {
                       <input type="text" className="form-control" id="hospital" ref="hospital" placeholder="Hospital" required />
                     </div>
                   </div>
-                  <button type="submit" className="btn btn-primary">Register</button>
+                  <div>
+                    <a href="http://localhost:3001/api/registration/auth/google">Google</a>
+                    <button type="submit" className="btn btn-primary">Register</button>
+                  </div>
                 </form>
 
               </div>
@@ -149,6 +152,7 @@ class Registration extends Component {
             {this.state.isMailSent && <div className="alert alert-success" role="alert">Confirmation mail has been sent to your mail</div>}
           </div>
           <div className="col"></div>
+
         </div>
       </div>
     )

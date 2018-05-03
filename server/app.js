@@ -26,8 +26,8 @@ app.use(cors())
 // });
 
 // use routes
-app.use('/api', require('./route/registration.js'));
-app.use('/api', require('./route/login.js'));
+app.use('/api/registration', require('./route/registration.js'));
+app.use('/api/login', require('./route/login.js'));
 
 
 // server listening

@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
 });
 
 // post request
-router.post('/login', (req, res) => {
+router.post('/', (req, res) => {
   const data = req.body;
   console.log('old', data)
 

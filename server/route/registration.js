@@ -2,23 +2,35 @@ const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-const registration = require('../models/registration.js')
+const registration = require('../models/registration.js');
+const passport = require('passport')
 
 // get request
-router.get('/reg', (req, res) => {
+router.get('/', (req, res) => {
   // res.send('dasd')
   registration.find({})
     .then(data => res.send(data))
 });
 
-router.get('/reg/:id', (req, res) => {
+router.get('/:email', (req, res) => {
   // res.send('dasd')
-  registration.find({ email: req.params.id })
+  registration.find({ email: req.params.email })
     .then(data => res.send(data))
 });
 
+router.get('/auth/google', passport.authenticate('google', {
+  scope: ['profile', 'email']
+})
+);
+
+router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {
+  // res.send("u have reached the callback url")
+  res.redirect('http://localhost:3000/temp')
+})
+
+
 // post request
-router.post('/registration', (req, res) => {
+router.post('/', (req, res) => {
   var data = req.body;
   // console.log("old data", data);
 
