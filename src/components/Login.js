@@ -100,11 +100,11 @@ class Login extends Component {
                     <label htmlFor="password" className="col-sm-4 col-form-label required">Password</label>
                     <div className="col-sm-8">
                       <input type="password" className="form-control" id="password" ref="password" placeholder="Password" required />
-                      <small><p className="text-left">password should atleast 8 characters include </p></small>
+                      {/* <small><p className="text-left">password should atleast 8 characters include </p></small> */}
                     </div>
                   </div>
 
-                  <button type="submit" className="btn btn-primary">Login</button>
+                  <Link to="/dashboard"><button type="submit" className="btn btn-primary">Login</button></Link>
                 </form>
 
               </div>
