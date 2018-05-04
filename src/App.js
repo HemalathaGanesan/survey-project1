@@ -17,7 +17,7 @@ class App extends Component {
         <div>
           <Route path="/registration" exact component={Registration} />
           <Route path="/login" exact component={Login} />
-          <Route path="/RegisterWithGoogle/:userId" exact render={({ match }) => (
+          <Route path="/registerWithGoogle/:userId" exact render={({ match }) => (
             <RegisterWithGoogle userId={match.params.userId} />
           )} />
           <Route path="/verifyUser/:userId" exact render={({ match }) => (
@@ -27,7 +27,7 @@ class App extends Component {
           <Route path="/error" exact component={ErrorPage} />
 
           {jwt.decode(localStorage.getItem('jwt-token')) ?
-            (<Route path="/Dashboard" exact component={Dashboard} />) : (<div></div>)}
+            (<Route path="/dashboard" exact component={Dashboard} />) : (<div></div>)}
         </div>
       </Router>
     );

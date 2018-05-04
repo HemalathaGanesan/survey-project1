@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Login from './Login'
-import Dashboard from './Dashboard';
+import { Redirect } from 'react-router-dom';
+// import Login from './Login'
+// import Dashboard from './Dashboard';
 
 class RegisterWithGoogle extends Component {
   constructor() {
     super();
-    this.state = {
-      isRedirected: false,
-    }
+    this.state = {}
   }
 
   storeData(e) {
@@ -30,8 +29,9 @@ class RegisterWithGoogle extends Component {
       .then(data => {
         if (data.success) {
           this.setState({ msg: data.message })
+          setTimeout(() => this.setState({toRedirect: true}),2000)
+          // this.props.history.push("/dashboard");
           this.refs.registrationForm.reset();
-          this.props.history.push("/dashboard");
         } else {
           this.setState({ msg: data.message })
         }
@@ -40,6 +40,11 @@ class RegisterWithGoogle extends Component {
   }
 
   render() {
+    if(this.state.toRedirect){
+      return(
+        <Redirect to="/dashboard" />
+      )
+    }
     return (
       <div className="container text-center registration-container">
         <div className="row">

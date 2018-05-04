@@ -59,12 +59,12 @@ class Login extends Component {
       method: 'POST'
     }).then(res => res.json())
       .then(data => {
-        console.log(data)
+        // console.log(data)
         if (data.success) {
           localStorage.setItem('jwt-token', data.token);
-          // set-Cookie: data.token;
-          this.refs.loginForm.reset();
+          console.log(this.props.history)
           this.props.history.push("/dashboard");
+          this.refs.loginForm.reset();
         } else {
           this.setState({ errorMsg: data.message })
           setTimeout(() => this.setState({ errorMsg: "" }), 5000);
@@ -96,7 +96,6 @@ class Login extends Component {
                     <label htmlFor="password" className="col-sm-4 col-form-label required">Password</label>
                     <div className="col-sm-8">
                       <input type="password" className="form-control" id="password" ref="password" placeholder="Password" required />
-                      {/* <small><p className="text-left">password should atleast 8 characters include </p></small> */}
                     </div>
                   </div>
                   <button type="submit" className="btn btn-primary">Login</button>
