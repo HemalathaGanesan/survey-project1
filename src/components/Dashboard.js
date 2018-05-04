@@ -1,6 +1,19 @@
 import React, { Component } from 'react'
 
 class Dashboard extends Component {
+  // componentWillMount() {
+  //   // console.log(localStorage.getItem('jwt-token'))
+  //   fetch("http://localhost:3001/api/dashboard/", {
+  //     headers: new Headers({
+  //       'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
+  //       'Content-Type': 'application/json'
+  //     }),
+  //     method: 'GET'
+  //   }).then(res => res.json())
+  //     .then(data => {
+  //       console.log(data);
+  //     })
+  // }
   render() {
     return (
       <div>

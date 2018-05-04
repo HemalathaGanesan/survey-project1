@@ -43,7 +43,7 @@ app.use(cors())
 // use routes
 app.use('/api/registration', require('./route/registration.js'));
 app.use('/api/login', require('./route/login.js'));
-
+app.use('/api/dashboard', require('./route/dashboard.js'));
 
 // server listening
 app.listen(3001, () => console.log("server started"))

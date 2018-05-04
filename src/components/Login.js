@@ -5,7 +5,9 @@ import { Link } from 'react-router-dom';
 class Login extends Component {
   constructor() {
     super();
-    this.state = { isVerified: false }
+    this.state = {
+      errorMsg: ""
+    }
   }
 
   storeData(e) {
@@ -15,7 +17,6 @@ class Login extends Component {
       password: this.refs.password.value,
     }
     // console.log(data)
-    this.getReq(data);
 
     this.props.dispatch({
       type: 'LOGIN_DATA',
@@ -24,29 +25,30 @@ class Login extends Component {
         password: this.refs.password.value
       }
     });
-    this.getReq(data);
+    // this.getReq(data);
+    this.postReq(data);
   }
 
-  getReq(data) {
-    // console.log(data)
-    fetch(`http://localhost:3001/api/registration/${data.email}`, {
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      }),
-      method: 'GET'
-    }).then(res => res.json())
-      .then(data => {
-        console.log(data);
-        if (data[0].isVerified === false) {
-          this.setState({ isVerified: true })
-          setTimeout(() => this.setState({ isVerified: false }), 5000)
-        } else {
-          this.setState({ isVerified: false })
-          this.props.history.push('/dashboard')
-        }
-      })
-      .catch(error => console.log(error));
-  }
+  // getReq(data) {
+  //   // console.log(data)
+  //   fetch(`http://localhost:3001/api/registration/${data.email}`, {
+  //     headers: new Headers({
+  //       'Content-Type': 'application/json'
+  //     }),
+  //     method: 'GET'
+  //   }).then(res => res.json())
+  //     .then(data => {
+  //       // console.log(data);
+  //       if (data[0].isVerified === false) {
+  //         this.setState({ isVerified: true })
+  //         setTimeout(() => this.setState({ isVerified: false }), 5000)
+  //       } else {
+  //         this.setState({ isVerified: false })
+  //         this.props.history.push('/dashboard')
+  //       }
+  //     })
+  //     .catch(error => console.log(error));
+  // }
 
   postReq(data) {
     fetch("http://localhost:3001/api/login/", {
@@ -56,12 +58,17 @@ class Login extends Component {
       }),
       method: 'POST'
     }).then(res => res.json())
-      .then(data => console.log(data))
+      .then(data => {
+        if (data.success) {
+          localStorage.setItem('jwt-token', data.token);
+          this.refs.registrationForm.reset();
+          this.props.history.push("/dashboard");
+        } else {
+          this.setState({ msg: data.message })
+          setTimeout(() => this.setState({ errorMsg: "" }), 5000);
+        }
+      })
       .catch(error => console.log(error));
-
-    this.setState({ isMailSent: true })
-    setTimeout(() => this.setState({ isMailSent: false }), 5000)
-    this.refs.loginForm.reset();
   }
 
   render() {
@@ -98,6 +105,7 @@ class Login extends Component {
             </div>
             <p>Dont't have account? Register <Link to="/registration"> Here</Link></p>
             {this.state.isVerified && <div className="alert alert-danger" role="alert">Mail not Verified</div>}
+            {this.state.errorMsg && <div className="alert alert-danger" role="alert">{this.state.errorMsg}</div>}
           </div>
           <div className="col"></div>
         </div>

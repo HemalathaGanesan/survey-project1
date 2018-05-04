@@ -1,18 +1,35 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 const keys = require('./keys');
-const User = require('../models/registration');
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
+const registration = require('../models/registration');
 
 passport.serializeUser((user, done) => {
   done(null, user.id)
 })
 
 passport.deserializeUser((id, done) => {
-  User.findById(id).then((user) => {
+  registration.findById(id).then((user) => {
     done(null, user)
   })
 })
 
+let opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = keys.secretKey;
+passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
+  registration.findOne({ _id: jwt_payload._id }, (err, user) => {
+    if (err) {
+      return done(err, false);
+    }
+    if (user) {
+      return done(null, user);
+    } else {
+      return done(null, false);
+    }
+  });
+}));
 
 passport.use(
   new GoogleStrategy({
@@ -21,15 +38,13 @@ passport.use(
     clientSecret: keys.google.clientSecret
   }, (accessToken, refreshToken, profile, done) => {
     //passport callback function
-    console.log('passport callback funtion fired')
-    console.log(profile);
-    User.findOne({ googleId: profile.id }).then((dbUserResult) => {
+    registration.findOne({ googleId: profile.id }).then((dbUserResult) => {
       if (dbUserResult) {
         console.log("user is already existing")
         done(null, dbUserResult)
       }
       else {
-        User.create({
+        registration.create({
           username: profile.displayName,
           googleId: profile.id,
           email: profile.emails[0].value

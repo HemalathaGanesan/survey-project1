@@ -7,8 +7,6 @@ class Registration extends Component {
   constructor() {
     super();
     this.state = {
-      isMailSent1: false,
-      isMailSent2: false,
       isValidPass: false,
       isValidConfPass: false,
     }
@@ -48,18 +46,16 @@ class Registration extends Component {
       method: 'POST'
     }).then(res => res.json())
       .then(data => {
-        if (data.isMailExist) {
-          this.setState({ isMailSent2: true, isMailExists: data.message })
-          setTimeout(() => this.setState({ isMailSent2: false }), 5000);
+        if (data.success) {
+          this.setState({ mailExistMsg: data.message })
+          setTimeout(() => this.setState({ mailExistMsg: "" }), 5000);
         } else {
-          this.setState({ isMailSent1: true, isMailSent: `${data.message}, Confirmation mail has been sent to your mail` })
-          setTimeout(() => this.setState({ isMailSent1: false }), 5000);
+          this.setState({ succesMsg: `${data.message}, Confirmation mail has been sent to your mail` })
+          setTimeout(() => this.setState({ succesMsg: "" }), 5000);
           this.refs.registrationForm.reset();
         }
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(err => console.log(err));
   }
 
 
@@ -149,15 +145,15 @@ class Registration extends Component {
                   </div>
                   <div>
                     <a href="http://localhost:3001/api/registration/auth/google" className="google-button">Google</a>
-                    <button type="submit" className="btn btn-primary" style={{float:"right"}}>Register</button>
+                    <button type="submit" className="btn btn-primary" style={{ float: "right" }}>Register</button>
                   </div>
                 </form>
 
               </div>
             </div>
-            <span>Already have account? Login <Link to="/login"> Here</Link></span>
-            {this.state.isMailSent1 && <div className="alert alert-success" role="alert">{this.state.isMailSent}</div>}
-            {this.state.isMailSent2 && <div className="alert alert-danger" role="alert">{this.state.isMailExists}</div>}
+            <p>Already have account? Login <Link to="/login"> Here</Link></p>
+            {this.state.mailExistMsg && <div className="alert alert-danger" role="alert">{this.state.mailExistMsg}</div>}
+            {this.state.succesMsg && <div className="alert alert-success" role="alert">{this.state.succesMsg}</div>}
           </div>
           <div className="col"></div>
 
