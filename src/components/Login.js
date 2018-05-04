@@ -59,12 +59,14 @@ class Login extends Component {
       method: 'POST'
     }).then(res => res.json())
       .then(data => {
+        console.log(data)
         if (data.success) {
           localStorage.setItem('jwt-token', data.token);
-          this.refs.registrationForm.reset();
+          // set-Cookie: data.token;
+          this.refs.loginForm.reset();
           this.props.history.push("/dashboard");
         } else {
-          this.setState({ msg: data.message })
+          this.setState({ errorMsg: data.message })
           setTimeout(() => this.setState({ errorMsg: "" }), 5000);
         }
       })
@@ -97,13 +99,13 @@ class Login extends Component {
                       {/* <small><p className="text-left">password should atleast 8 characters include </p></small> */}
                     </div>
                   </div>
-                  <a href="http://localhost:3001/api/registration/auth/google" className="google-button">Google</a>
                   <button type="submit" className="btn btn-primary">Login</button>
                 </form>
 
               </div>
             </div>
             <p>Dont't have account? Register <Link to="/registration"> Here</Link></p>
+            <p>Login with <a href="http://localhost:3001/api/registration/auth/google"><button className="btn fa fa-google button-google"> Google</button></a></p>
             {this.state.isVerified && <div className="alert alert-danger" role="alert">Mail not Verified</div>}
             {this.state.errorMsg && <div className="alert alert-danger" role="alert">{this.state.errorMsg}</div>}
           </div>

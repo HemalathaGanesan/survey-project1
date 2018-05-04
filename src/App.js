@@ -8,17 +8,10 @@ import VerifyUser from './components/VerifyUser';
 import Dashboard from './components/Dashboard';
 import ErrorPage from './components/ErrorPage'
 import jwt from 'jsonwebtoken';
-
+import './App.css';
 
 class App extends Component {
   render() {
-    // let display;
-    // if(jwt.decode(localStorage.getItem('jwt-token'))){
-    //   display=<Route path="/Dashboard" exact component={Dashboard} />;
-    // }
-    // else{
-    //   display=(<Redirect to="/error" />)
-    // }
     return (
       <Router>
         <div>

@@ -38,7 +38,7 @@ passport.use(
     clientSecret: keys.google.clientSecret
   }, (accessToken, refreshToken, profile, done) => {
     //passport callback function
-    registration.findOne({ googleId: profile.id }).then((dbUserResult) => {
+    registration.findOne({ email: profile.emails[0].value }).then((dbUserResult) => {
       if (dbUserResult) {
         console.log("user is already existing")
         done(null, dbUserResult)
@@ -49,7 +49,7 @@ passport.use(
           googleId: profile.id,
           email: profile.emails[0].value
         }).then((result) => {
-          console.log("new user created" + result)
+          console.log("new user created")
         })
       }
     })

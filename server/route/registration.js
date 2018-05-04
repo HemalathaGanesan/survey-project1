@@ -60,41 +60,41 @@ router.post('/', (req, res) => {
               register.save()
                 .then(result => {
                   // send confirmation mail 
-                  // const url = `http://localhost:3000/verifyUser/${result._id}`;
-                  // const mailAccount = {
-                  //   user: 'test.skiploop@gmail.com',
-                  //   password: 'Test@123',
-                  // }
+                  const url = `http://localhost:3000/verifyUser/${result._id}`;
+                  const mailAccount = {
+                    user: 'test.skiploop@gmail.com',
+                    password: 'Test@123',
+                  }
 
-                  // nodemailer.createTestAccount((err, account) => {
-                  //   let transporter = nodemailer.createTransport({
-                  //     host: 'smtp.gmail.com',
-                  //     port: 587,
-                  //     secure: false,
-                  //     auth: {
-                  //       user: mailAccount.user,
-                  //       pass: mailAccount.password
-                  //     }
-                  //   });
+                  nodemailer.createTestAccount((err, account) => {
+                    let transporter = nodemailer.createTransport({
+                      host: 'smtp.gmail.com',
+                      port: 587,
+                      secure: false,
+                      auth: {
+                        user: mailAccount.user,
+                        pass: mailAccount.password
+                      }
+                    });
 
-                  //   let mailOptions = {
-                  //     from: `"Confirm mail" <${mailAccount.user}>`,
-                  //     to: req.body.email,
-                  //     subject: 'Confirm Email',
-                  //     html: `hello!! Please click this link to confirm your email: <a href="${url}">${url}</a>`,
-                  //   };
+                    let mailOptions = {
+                      from: `"Confirm mail" <${mailAccount.user}>`,
+                      to: req.body.email,
+                      subject: 'Confirm Email',
+                      html: `hello!! Please click this link to confirm your email: <a href="${url}">${url}</a>`,
+                    };
 
-                  //   transporter.sendMail(mailOptions, (error, info) => {
-                  //     if (error) {
-                  //       return console.log(error);
-                  //     }
-                  //     console.log('Message sent: %s', info.messageId);
-                  //     console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+                    transporter.sendMail(mailOptions, (error, info) => {
+                      if (error) {
+                        return console.log(error);
+                      }
+                      console.log('Message sent: %s', info.messageId);
+                      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
-                  //     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-                  //     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-                  //   });
-                  // })
+                      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+                      // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+                    });
+                  })
 
                   res.json({
                     message: "Registered succesfully"

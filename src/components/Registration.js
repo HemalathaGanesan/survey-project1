@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './Registration.css';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -144,14 +143,14 @@ class Registration extends Component {
                     </div>
                   </div>
                   <div>
-                    <a href="http://localhost:3001/api/registration/auth/google" className="google-button">Google</a>
-                    <button type="submit" className="btn btn-primary" style={{ float: "right" }}>Register</button>
+                    <button type="submit" className="btn btn-primary">Register</button>
                   </div>
                 </form>
 
               </div>
             </div>
             <p>Already have account? Login <Link to="/login"> Here</Link></p>
+            <p>Register with <a href="http://localhost:3001/api/registration/auth/google"><button className="btn fa fa-google button-google"> Google</button></a></p>
             {this.state.mailExistMsg && <div className="alert alert-danger" role="alert">{this.state.mailExistMsg}</div>}
             {this.state.succesMsg && <div className="alert alert-success" role="alert">{this.state.succesMsg}</div>}
           </div>
