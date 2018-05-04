@@ -26,7 +26,7 @@ router.get('/auth/google', passport.authenticate('google', {
 
 router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {
   if (req.user.hospital) {
-    res.redirect("http://localhost:3000/dashboard");
+    res.redirect("http://localhost:3000/dashboard/");
   } else {
     res.redirect(`http://localhost:3000/registerWithGoogle/${req.user._id}`)
   }
