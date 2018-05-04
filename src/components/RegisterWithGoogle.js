@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-// import './RegisterWithGoogle.css';
 import { connect } from 'react-redux';
-import { Route, Redirect } from 'react-router';
 import Login from './Login'
 import Dashboard from './Dashboard';
 
 class RegisterWithGoogle extends Component {
-
   constructor() {
     super();
     this.state = {
@@ -23,7 +20,7 @@ class RegisterWithGoogle extends Component {
     this.putReq(data);
   }
   putReq(data) {
-    fetch(`http://localhost:3001/api/registration/${this.props.googleId}`, {
+    fetch(`http://localhost:3001/api/registration/${this.props.userId}`, {
       body: JSON.stringify(data),
       headers: new Headers({
         'Content-Type': 'application/json'
@@ -31,21 +28,18 @@ class RegisterWithGoogle extends Component {
       method: 'PUT'
     }).then(res => res.json())
       .then(data => {
-        if (data.isRedirect) {
-          this.setState({ isRedirected: true, isRedirectMsg: data.message })
+        if (data.success) {
+          this.setState({ msg: data.message })
           this.refs.registrationForm.reset();
+          this.props.history.push("/dashboard");
+        } else {
+          this.setState({ msg: data.message })
         }
       })
       .catch(err => console.log(err))
   }
 
   render() {
-    console.log(this.props.googleId)
-    if (this.state.isRedirected) {
-      return (
-        <Dashboard />
-      )
-    }
     return (
       <div className="container text-center registration-container">
         <div className="row">
@@ -71,7 +65,7 @@ class RegisterWithGoogle extends Component {
 
               </div>
             </div>
-            {this.state.isRedirected && <div className="alert alert-success" role="alert">{this.state.isRedirectMsg}</div>}
+            {this.state.msg && <div className="alert alert-success" role="alert">{this.state.msg}</div>}
           </div>
           <div className="col"></div>
 
