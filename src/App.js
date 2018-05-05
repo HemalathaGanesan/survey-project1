@@ -11,6 +11,7 @@ import jwt from 'jsonwebtoken';
 import './App.css';
 
 class App extends Component {
+  
   render() {
     return (
       <Router>
@@ -23,11 +24,8 @@ class App extends Component {
           <Route path="/verifyUser/:userId" exact render={({ match }) => (
             <VerifyUser userId={match.params.userId} />
           )} />
-
+          <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/error" exact component={ErrorPage} />
-
-          {jwt.decode(localStorage.getItem('jwt-token')) ?
-            (<Route path="/dashboard" exact component={Dashboard} />) : (<div></div>)}
         </div>
       </Router>
     );

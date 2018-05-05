@@ -98,30 +98,17 @@ class Registration extends Component {
               <div className="card-body">
 
                 <form onSubmit={this.storeData.bind(this)} ref="registrationForm">
-                  <p style={{ color: 'red' }}>Note: * field's are mandatory</p>
                   <div className="form-group row">
-                    <label htmlFor="email" className="col-sm-4 col-form-label required">Email</label>
+                    <label htmlFor="email" className="col-sm-4 col-form-label">Email</label>
                     <div className="col-sm-8">
                       <input type="email" className="form-control" id="email" ref="email" placeholder="Email" required />
                     </div>
                   </div>
 
                   <div className="form-group row">
-                    <label htmlFor="password" className="col-sm-4 col-form-label required">Password</label>
+                    <label htmlFor="password" className="col-sm-4 col-form-label">Password</label>
                     <div className="col-sm-8">
                       <input type="password" className="form-control" id="password" ref="password" placeholder="Password" required onChange={this.validatePass.bind(this)} />
-                      {/* <small><p className="text-left">password should atleast 8 characters</p></small> */}
-                      {/* {this.state.isValidPass && <div className="alert alert-danger alert-dismissible fade show text-left" role="alert">
-                        <strong>Password must have</strong>
-                        <ul>
-                          <li>atleast 8 characters</li>
-                          <li>1 uppercase(A-Z)</li>
-                          <li>1 number(0-9)</li>
-                        </ul>
-                        <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>} */}
                       {this.state.isValidPass1 && <div className="alert alert-danger" role="alert">password must atleast 8 characters!</div>}
                       {this.state.isValidPass2 && <div className="alert alert-danger" role="alert">1 uppercase!</div>}
                       {this.state.isValidPass3 && <div className="alert alert-danger" role="alert">1 number!</div>}
@@ -129,7 +116,7 @@ class Registration extends Component {
                   </div>
 
                   <div className="form-group row">
-                    <label htmlFor="confirmPassword" className="col-sm-4 col-form-label required">Confirm Password</label>
+                    <label htmlFor="confirmPassword" className="col-sm-4 col-form-label">Confirm Password</label>
                     <div className="col-sm-8">
                       <input type="password" className="form-control" id="confirmPassword" ref="confirmPassword" placeholder="Confirm Password" required onChange={this.validateConfPass.bind(this)} />
                       {this.state.isValidConfPass && <div className="alert alert-danger" role="alert">password didn't match!</div>}
@@ -137,7 +124,7 @@ class Registration extends Component {
                   </div>
 
                   <div className="form-group row">
-                    <label htmlFor="hospital" className="col-sm-4 col-form-label required">Hospital</label>
+                    <label htmlFor="hospital" className="col-sm-4 col-form-label">Hospital</label>
                     <div className="col-sm-8">
                       <input type="text" className="form-control" id="hospital" ref="hospital" placeholder="Hospital" required />
                     </div>

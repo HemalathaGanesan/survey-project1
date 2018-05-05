@@ -25,6 +25,7 @@ router.get('/auth/google', passport.authenticate('google', {
 );
 
 router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {
+  console.log('Cookies: ', req.universalCookies)
   if (req.user.hospital) {
     res.redirect("http://localhost:3000/dashboard/");
   } else {
@@ -81,7 +82,7 @@ router.post('/', (req, res) => {
                       from: `"Confirm mail" <${mailAccount.user}>`,
                       to: req.body.email,
                       subject: 'Confirm Email',
-                      html: `hello!! Please click this link to confirm your email: <a href="${url}">${url}</a>`,
+                      html: `Hello!! <br />Please click this link to confirm your email: <a href="${url}">${url}</a>`,
                     };
 
                     transporter.sendMail(mailOptions, (error, info) => {
@@ -114,14 +115,14 @@ router.put('/:userId', (req, response) => {
     .then(data => {
       if (data.hospital) {
         response.json({
-          message: "failed, hospital not updated",
+          message: "Failed, hospital not updated",
           success: false
         })
       } else {
         registration.findByIdAndUpdate({ _id: req.params.userId }, req.body)
           .then(result => {
             response.json({
-              message: "account updated",
+              message: "Account updated, Wait.. Redirecting to Login page",
               success: true
             })
           })

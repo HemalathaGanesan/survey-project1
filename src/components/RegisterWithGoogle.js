@@ -53,27 +53,20 @@ class RegisterWithGoogle extends Component {
             <div className="card border-dark">
               <h4 className="card-header">One more step</h4>
               <div className="card-body">
-
                 <form onSubmit={this.storeData.bind(this)} ref="registrationForm">
-                  <p style={{ color: 'red' }}>Note: * field's are mandatory</p>
-
                   <div className="form-group row">
-                    <label htmlFor="hospital" className="col-sm-4 col-form-label required">Hospital</label>
+                    <label htmlFor="hospital" className="col-sm-4 col-form-label">Hospital</label>
                     <div className="col-sm-8">
                       <input type="text" className="form-control" id="hospital" ref="hospital" placeholder="Hospital" required />
                     </div>
                   </div>
-
                   <button type="submit" className="btn btn-primary">Register</button>
-
                 </form>
-
               </div>
             </div>
             {this.state.msg && <div className="alert alert-success" role="alert">{this.state.msg}</div>}
           </div>
           <div className="col"></div>
-
         </div>
       </div>
     )

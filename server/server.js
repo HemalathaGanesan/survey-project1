@@ -2,29 +2,33 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const passportSetup = require('./config/passport-setup');
-const keys = require('./config/keys')
-const cookieSession = require('cookie-session');
 const passport = require('passport');
-
+const cookieSession = require('cookie-session');
+const passportSetup = require('./config/passport-setup');
+const keys = require('./config/keys');
 
 // express app
 const app = express();
 
-//cookie time-limit
+// connect to mongodb
+mongoose.connect('mongodb://localhost/survey_project', (err) => {
+  if (err) {
+    console.log("Unalbe to connect to DB", err);
+  } else {
+    console.log("connected to DB");
+  }
+});
+mongoose.Promise = global.Promise;
+
+// cookie time-limit
 app.use(cookieSession({
- maxAge: 60*1000,
- keys:[keys.session.cookieKey]
+  maxAge: 60 * 1000,
+  keys: [keys.session.cookieKey]
 }));
 
-//initialize passport
+// initialize passport
 app.use(passport.initialize());
 app.use(passport.session());
-
-
-// connect to mongodb
-mongoose.connect('mongodb://localhost/survey_project');
-mongoose.Promise = global.Promise;
 
 // body parser
 app.use(bodyParser.json());
@@ -34,9 +38,10 @@ app.use(bodyParser.json());
 // use cors
 app.use(cors())
 
-app.use(function (req, res, next) {
+// use headers
+app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   next();
 });
 

@@ -59,12 +59,12 @@ class Login extends Component {
       method: 'POST'
     }).then(res => res.json())
       .then(data => {
-        // console.log(data)
         if (data.success) {
           localStorage.setItem('jwt-token', data.token);
-          console.log(this.props.history)
+          // sessionStorage.setItem(data.token);
+          // console.log(sessionStorage.setItem("cookie-token", data.token))
           this.props.history.push("/dashboard");
-          this.refs.loginForm.reset();
+          // this.refs.loginForm.reset();
         } else {
           this.setState({ errorMsg: data.message })
           setTimeout(() => this.setState({ errorMsg: "" }), 5000);
@@ -84,23 +84,20 @@ class Login extends Component {
               <div className="card-body">
 
                 <form onSubmit={this.storeData.bind(this)} ref="loginForm">
-                  <p style={{ color: 'red' }}>Note: * field's are mandatory</p>
                   <div className="form-group row">
-                    <label htmlFor="email" className="col-sm-4 col-form-label required">Email</label>
+                    <label htmlFor="email" className="col-sm-4 col-form-label">Email</label>
                     <div className="col-sm-8">
                       <input type="email" className="form-control" id="email" ref="email" placeholder="abcde@email.com" required />
                     </div>
                   </div>
-
                   <div className="form-group row">
-                    <label htmlFor="password" className="col-sm-4 col-form-label required">Password</label>
+                    <label htmlFor="password" className="col-sm-4 col-form-label">Password</label>
                     <div className="col-sm-8">
                       <input type="password" className="form-control" id="password" ref="password" placeholder="Password" required />
                     </div>
                   </div>
                   <button type="submit" className="btn btn-primary">Login</button>
                 </form>
-
               </div>
             </div>
             <p>Dont't have account? Register <Link to="/registration"> Here</Link></p>
