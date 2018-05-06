@@ -6,18 +6,13 @@ const passport = require('passport');
 const cookieSession = require('cookie-session');
 const passportSetup = require('./config/passport-setup');
 const keys = require('./config/keys');
+const CookieParser = require('cookie-parser')
 
 // express app
 const app = express();
 
 // connect to mongodb
-mongoose.connect('mongodb://localhost/survey_project', (err) => {
-  if (err) {
-    console.log("Unalbe to connect to DB", err);
-  } else {
-    console.log("connected to DB");
-  }
-});
+mongoose.connect('mongodb://localhost/survey_project');
 mongoose.Promise = global.Promise;
 
 // cookie time-limit
@@ -37,6 +32,9 @@ app.use(bodyParser.json());
 
 // use cors
 app.use(cors())
+
+// use cookies
+app.use(CookieParser())
 
 // use headers
 app.use((req, res, next) => {

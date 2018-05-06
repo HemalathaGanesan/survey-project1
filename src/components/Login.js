@@ -61,8 +61,6 @@ class Login extends Component {
       .then(data => {
         if (data.success) {
           localStorage.setItem('jwt-token', data.token);
-          // sessionStorage.setItem(data.token);
-          // console.log(sessionStorage.setItem("cookie-token", data.token))
           this.props.history.push("/dashboard");
           // this.refs.loginForm.reset();
         } else {

@@ -4,6 +4,8 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const registration = require('../models/registration.js');
 const passport = require('passport')
+const jwt = require('jsonwebtoken')
+const config = require('../config/keys')
 
 // get request
 router.get('/', (req, res) => {
@@ -25,10 +27,15 @@ router.get('/auth/google', passport.authenticate('google', {
 );
 
 router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {
-  console.log('Cookies: ', req.universalCookies)
+  // console.log("req.user", req.user);
   if (req.user.hospital) {
-    res.redirect("http://localhost:3000/dashboard/");
+    let token = jwt.sign(req.user.toJSON(), config.secretKey, {
+      expiresIn: "10m"
+    });
+    res.cookie('jwt', token);
+    res.redirect("http://localhost:3000/registerWithGoogle");
   } else {
+    // res.cookie('jwt', token);
     res.redirect(`http://localhost:3000/registerWithGoogle/${req.user._id}`)
   }
 })
@@ -91,12 +98,10 @@ router.post('/', (req, res) => {
                       }
                       console.log('Message sent: %s', info.messageId);
                       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-
                       // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
                       // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
                     });
                   })
-
                   res.json({
                     message: "Registered succesfully"
                   })
@@ -110,21 +115,30 @@ router.post('/', (req, res) => {
 });
 
 
-router.put('/:userId', (req, response) => {
+router.put('/:userId', (req, res) => {
   registration.findOne({ _id: req.params.userId })
     .then(data => {
       if (data.hospital) {
-        response.json({
+        res.json({
           message: "Failed, hospital not updated",
           success: false
         })
       } else {
         registration.findByIdAndUpdate({ _id: req.params.userId }, req.body)
-          .then(result => {
-            response.json({
-              message: "Account updated, Wait.. Redirecting to Login page",
-              success: true
-            })
+          .then(() => {
+            registration.findOne({ _id: req.params.userId })
+              .then(result => {
+                // console.log("result", result)
+                let token = jwt.sign(result.toJSON(), config.secretKey, {
+                  expiresIn: "10m"
+                });
+                // res.cookie('jwt', token);
+                res.json({
+                  message: "Account updated, Wait.. Redirecting to Login page",
+                  success: true,
+                  token: token
+                })
+              })
           })
       }
     })

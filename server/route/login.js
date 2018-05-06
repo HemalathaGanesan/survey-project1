@@ -32,9 +32,16 @@ router.post('/', (req, res) => {
             let token = jwt.sign(result.toJSON(), config.secretKey, {
               expiresIn: "10m"
             });
-            res.json({ success: true, message: 'Login succesfully', token: token });
+            res.json({
+              success: true,
+              message: 'Login succesfully',
+              token: token
+            });
           } else {
-            res.json({ success: false, message: 'Authentication failed. Password did not match' });
+            res.json({
+              success: false,
+              message: 'Authentication failed. Password did not match'
+            });
           }
         });
       }

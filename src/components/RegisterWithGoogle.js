@@ -10,6 +10,15 @@ class RegisterWithGoogle extends Component {
     this.state = {}
   }
 
+  componentWillMount() {
+    console.log("document.cookie", document.cookie)
+    if (document.cookie) {
+      console.log("if cond")
+      localStorage.setItem('jwt-token', document.cookie.split('=')[1]);
+      window.location.href = '/dashboard';
+    }
+  }
+
   storeData(e) {
     e.preventDefault();
     let data = {
@@ -28,8 +37,10 @@ class RegisterWithGoogle extends Component {
     }).then(res => res.json())
       .then(data => {
         if (data.success) {
+          localStorage.setItem('jwt-token', data.token);
+          // localStorage.setItem('jwt-token',document.cookie.split('=')[1])
           this.setState({ msg: data.message })
-          setTimeout(() => this.setState({toRedirect: true}),2000)
+          setTimeout(() => this.setState({ toRedirect: true }), 2000)
           // this.props.history.push("/dashboard");
           this.refs.registrationForm.reset();
         } else {
@@ -40,13 +51,14 @@ class RegisterWithGoogle extends Component {
   }
 
   render() {
-    if(this.state.toRedirect){
-      return(
+    if (this.state.toRedirect) {
+      return (
         <Redirect to="/dashboard" />
       )
     }
     return (
-      <div className="container text-center registration-container">
+      (this.props.userId) &&
+      (<div className="container text-center registration-container">
         <div className="row">
           <div className="col"></div>
           <div className="col-md-6">
@@ -68,7 +80,7 @@ class RegisterWithGoogle extends Component {
           </div>
           <div className="col"></div>
         </div>
-      </div>
+      </div>)
     )
   }
 }

@@ -18,7 +18,12 @@ class Dashboard extends Component {
   // }
 
   componentWillMount() {
-    console.log(this)
+    // console.log(document.cookie)
+    // console.log(localStorage.getItem('jwt-token'))
+    // if ((localStorage.getItem('jwt-token')) === null) {
+    //   console.log("entered into if loop")
+    //   localStorage.setItem('jwt-token', document.cookie.split('=')[1])
+    // }
   }
   removeToken() {
     localStorage.removeItem("jwt-token");
@@ -26,26 +31,19 @@ class Dashboard extends Component {
   }
 
   render() {
+    console.log("token", jwt.decode(localStorage.getItem('jwt-token')))
     return (
       <div>
-        {jwt.decode(localStorage.getItem('jwt-token')) ?
+        {(localStorage.getItem('jwt-token')) ?
           (<div>
 
-            <nav class="navbar navbar-light bg-light">
+            <nav className="navbar navbar-light bg-light">
               <h1>Welcome to Dashboard</h1>
               <button className="btn btn-danger" onClick={this.removeToken.bind(this)}>Logout</button>
             </nav>
 
             <div className="container"></div>
-          </div>) : (<div>
-
-            <nav class="navbar navbar-light bg-light">
-              <h1>Welcome to Dashboard</h1>
-              <button className="btn btn-danger" onClick={this.removeToken.bind(this)}>Logout</button>
-            </nav>
-
-            <div className="container"></div>
-          </div>)}
+          </div>) : (<Redirect to="/login" />)}
       </div>
     )
   }

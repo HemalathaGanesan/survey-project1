@@ -31,14 +31,14 @@ passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
   });
 }));
 
-passport.use(
-  new GoogleStrategy({
-    callbackURL: 'http://localhost:3001/api/registration/auth/google/redirect',
-    clientID: keys.google.clientID,
-    clientSecret: keys.google.clientSecret
-  }, (accessToken, refreshToken, profile, done) => {
-    //passport callback function
-    registration.findOne({ email: profile.emails[0].value }).then((dbUserResult) => {
+passport.use(new GoogleStrategy({
+  callbackURL: 'http://localhost:3001/api/registration/auth/google/redirect',
+  clientID: keys.google.clientID,
+  clientSecret: keys.google.clientSecret
+}, (accessToken, refreshToken, profile, done) => {
+  //passport callback function
+  registration.findOne({ email: profile.emails[0].value })
+    .then((dbUserResult) => {
       if (dbUserResult) {
         console.log("user is already existing")
         done(null, dbUserResult)
@@ -54,5 +54,5 @@ passport.use(
       }
     })
 
-  })
+})
 )
