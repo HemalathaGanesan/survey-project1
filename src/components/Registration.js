@@ -136,7 +136,7 @@ class Registration extends Component {
 
               </div>
             </div>
-            <p>Already have account? Login <Link to="/login"> Here</Link></p>
+            <p>Already have account? Login <Link to="/"> Here</Link></p>
             <p>Register with <a href="http://localhost:3001/api/registration/auth/google"><button className="btn fa fa-google button-google"> Google</button></a></p>
             {this.state.mailExistMsg && <div className="alert alert-danger" role="alert">{this.state.mailExistMsg}</div>}
             {this.state.succesMsg && <div className="alert alert-success" role="alert">{this.state.succesMsg}</div>}

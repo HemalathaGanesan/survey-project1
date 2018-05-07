@@ -9,41 +9,40 @@
   padding: 3px;
   border-radius: 4px;
 }
-.container-fluid{
+.survey{
     /* background-color:cadetblue; */
     width: 100%;
-    height: 499px;
+    /* height: 499px; */
    
 }
-.header{
-    
+.survey .header{    
     background-color:#179d82;
     width:100%;
     height: 100px;
     display: flex;
     justify-content: space-around;
 }
-.header p{
+.survey .header p{
     color: white;
-    font-size: 42px;
-    padding-top: 19px;
+    font-size: 1rem;
+    margin-top: 30px;
 }
-.btn{
+.survey .btn{
     height: 40px;
     margin-top: 31px;
 }
-.card{
+.form-field .card{
     margin-top: 25px;
     background-color: ghostwhite;
-    height: 290px;
+    /* height: 290px; */
 }
-.row{
+.form-field .row{
     justify-content: center;
 }
-.card-text p{
+.form-field .card-text p{
     margin-bottom: 3rem;
 }
-.btn-primary{
+.form-field .btn-primary{
     background-color: #179d82;
     border-color: #179d82;
 }

@@ -28,6 +28,7 @@ class Dashboard extends Component {
       var forms=(this.state.data).map((formName,idx)=>{
         return(
           <div key={idx}>
+          <div className="form-field">
       <div className="row">
         <div className="col-md-8">
           <div className="card">
@@ -41,6 +42,7 @@ class Dashboard extends Component {
           </div>
         </div>
         </div>
+        </div>
         </div>)
       }) 
     }
@@ -49,10 +51,12 @@ class Dashboard extends Component {
       <div>
         {(localStorage.getItem('jwt-token')) ?
           (<div className="container-fluid">
+          <div className="survey">
           <div className="header">
           <p>SURVEY
          </p>
          <button className="btn btn-danger" onClick={this.removeToken.bind(this)}>Logout</button>
+          </div>
           </div>
           {forms}
             </div>) : (<Redirect to="/" />)}
