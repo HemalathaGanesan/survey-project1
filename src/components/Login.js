@@ -59,10 +59,11 @@ class Login extends Component {
       method: 'POST'
     }).then(res => res.json())
       .then(data => {
+        console.log(data.token)
         if (data.success) {
           localStorage.setItem('jwt-token', data.token);
-          this.props.history.push("/dashboard");
           this.refs.loginForm.reset();
+          window.location.href = "/dashboard";
         } else {
           this.setState({ errorMsg: data.message })
           setTimeout(() => this.setState({ errorMsg: "" }), 5000);

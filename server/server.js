@@ -8,6 +8,8 @@ const passportSetup = require('./config/passport-setup');
 const keys = require('./config/keys');
 const cookieParser = require('cookie-parser')
 
+const PORT = 3001;
+
 // express app
 const app = express();
 
@@ -51,22 +53,20 @@ app.use(cors())
 // use cookies
 app.use(cookieParser())
 
-
-
 // use routes
 app.use('/api/registration', require('./route/registration.js'));
 app.use('/api/login', require('./route/login.js'));
-// app.use('/api/dashboard', require('./route/dashboard.js'));
-app.use("/api", require("./route/api"))
-
+app.use('/api/dashboard', require('./route/dashboard.js'));
+// app.use("/api", require("./route/api"))
 
 // hadling errors
 app.use((err, req, res, next) => {
   console.log(err)
   res.status(500).send({ error: err.message })
 })
+
 // server listening
-app.listen(3001, () => console.log("server started"))
+app.listen(PORT, () => console.log("server started"))
 
 
 

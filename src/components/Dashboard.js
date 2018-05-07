@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
-import { BrowserRouter as Router, Route, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 
 class Dashboard extends Component {
@@ -13,15 +13,21 @@ class Dashboard extends Component {
     }
   }
   componentDidMount() {
-    fetch('http://localhost:3001/api/formname').then(res => res.json()).then(name => {
-      this.setState({ data: name, dataPresent: true })
-    })
+    fetch('http://localhost:3001/api/dashboard/formname', {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+    }).then(res => res.json())
+      .then(name => {
+        this.setState({ data: name, dataPresent: true })
+      })
+      .catch(err => console.log(err))
   }
+
   removeToken() {
     localStorage.removeItem("jwt-token");
     document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    // sessionStorage.removeItem("jwt-token");
-    // res.clearCookie("key");
     window.location.reload();
   }
 

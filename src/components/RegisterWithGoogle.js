@@ -15,6 +15,7 @@ class RegisterWithGoogle extends Component {
   componentWillMount() {
     fetch(`http://localhost:3001/api/registration/${this.props.userId}`, {
       headers: new Headers({
+        'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
         'Content-Type': 'application/json'
       }),
       method: 'GET'
@@ -53,6 +54,7 @@ class RegisterWithGoogle extends Component {
     fetch(`http://localhost:3001/api/registration/${this.props.userId}`, {
       body: JSON.stringify(data),
       headers: new Headers({
+        'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
         'Content-Type': 'application/json'
       }),
       method: 'PUT'
