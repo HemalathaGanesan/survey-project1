@@ -27,12 +27,13 @@ class Dashboard extends Component {
   }
   removeToken() {
     localStorage.removeItem("jwt-token");
+    document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    // sessionStorage.removeItem("jwt-token");
     // res.clearCookie("key");
     window.location.reload();
   }
 
   render() {
-    console.log("token", jwt.decode(localStorage.getItem('jwt-token')))
     return (
       <div>
         {(localStorage.getItem('jwt-token')) ?
