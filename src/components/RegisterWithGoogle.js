@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Login from './Login'
-import Dashboard from './Dashboard';
+import { Redirect } from 'react-router-dom';
+// import Login from './Login'
+// import Dashboard from './Dashboard';
 
 class RegisterWithGoogle extends Component {
   constructor() {
     super();
-    this.state = {
-      isRedirected: false,
+    this.state = {}
+  }
+
+  componentWillMount() {
+    console.log("document.cookie", document.cookie)
+    if (document.cookie) {
+      console.log("if cond")
+      localStorage.setItem('jwt-token', document.cookie.split('=')[1]);
+      window.location.href = '/dashboard';
     }
   }
 
@@ -29,9 +37,12 @@ class RegisterWithGoogle extends Component {
     }).then(res => res.json())
       .then(data => {
         if (data.success) {
+          localStorage.setItem('jwt-token', data.token);
+          // localStorage.setItem('jwt-token',document.cookie.split('=')[1])
           this.setState({ msg: data.message })
+          setTimeout(() => this.setState({ toRedirect: true }), 2000)
+          // this.props.history.push("/dashboard");
           this.refs.registrationForm.reset();
-          this.props.history.push("/dashboard");
         } else {
           this.setState({ msg: data.message })
         }
@@ -40,37 +51,36 @@ class RegisterWithGoogle extends Component {
   }
 
   render() {
+    if (this.state.toRedirect) {
+      return (
+        <Redirect to="/dashboard" />
+      )
+    }
     return (
-      <div className="container text-center registration-container">
+      (this.props.userId) &&
+      (<div className="container text-center registration-container">
         <div className="row">
           <div className="col"></div>
           <div className="col-md-6">
             <div className="card border-dark">
               <h4 className="card-header">One more step</h4>
               <div className="card-body">
-
                 <form onSubmit={this.storeData.bind(this)} ref="registrationForm">
-                  <p style={{ color: 'red' }}>Note: * field's are mandatory</p>
-
                   <div className="form-group row">
-                    <label htmlFor="hospital" className="col-sm-4 col-form-label required">Hospital</label>
+                    <label htmlFor="hospital" className="col-sm-4 col-form-label">Hospital</label>
                     <div className="col-sm-8">
                       <input type="text" className="form-control" id="hospital" ref="hospital" placeholder="Hospital" required />
                     </div>
                   </div>
-
                   <button type="submit" className="btn btn-primary">Register</button>
-
                 </form>
-
               </div>
             </div>
             {this.state.msg && <div className="alert alert-success" role="alert">{this.state.msg}</div>}
           </div>
           <div className="col"></div>
-
         </div>
-      </div>
+      </div>)
     )
   }
 }

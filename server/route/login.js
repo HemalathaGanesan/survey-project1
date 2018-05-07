@@ -23,18 +23,25 @@ router.post('/', (req, res) => {
       else if (!result.isVerified) {
         res.send({
           succes: false,
-          message: 'mail not verified'
+          message: 'Email not verified, Verify your email to Login'
         })
       } else {
         bcrypt.compare(req.body.password, result.password, function (err, resp) {
           // resp == true || fasle
           if (resp) {
             let token = jwt.sign(result.toJSON(), config.secretKey, {
-              expiresIn: "10m"
+              expiresIn: "1h"
             });
-            res.json({ success: true, token: token });
+            res.json({
+              success: true,
+              message: 'Login succesfully',
+              token: token
+            });
           } else {
-            res.json({ success: false, message: 'Authentication failed. Password did not match' });
+            res.json({
+              success: false,
+              message: 'Authentication failed. Password did not match'
+            });
           }
         });
       }

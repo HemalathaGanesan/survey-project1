@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import Route from 'react-router-dom/Route';
 import Registration from './components/Registration';
 import Login from './components/Login';
@@ -8,33 +8,37 @@ import VerifyUser from './components/VerifyUser';
 import Dashboard from './components/Dashboard';
 import ErrorPage from './components/ErrorPage'
 import jwt from 'jsonwebtoken';
+import './App.css';
 
+
+// const Verify =(nextState,replace) => {
+//   if (!localStorage.getItem('jwt-token')){
+//     replace({
+//       pathname:'/login',
+//       state:{
+//         nextPathname:nextState.location.pathname
+//       }
+//     })
+//   }
+// }
 
 class App extends Component {
+  
   render() {
-    // let display;
-    // if(jwt.decode(localStorage.getItem('jwt-token'))){
-    //   display=<Route path="/Dashboard" exact component={Dashboard} />;
-    // }
-    // else{
-    //   display=(<Redirect to="/error" />)
-    // }
     return (
       <Router>
         <div>
           <Route path="/registration" exact component={Registration} />
           <Route path="/login" exact component={Login} />
-          <Route path="/RegisterWithGoogle/:userId" exact render={({ match }) => (
+          <Route path="/registerWithGoogle/:userId" exact render={({ match }) => (
             <RegisterWithGoogle userId={match.params.userId} />
           )} />
+          <Route path="/registerWithGoogle" exact component={RegisterWithGoogle} />
           <Route path="/verifyUser/:userId" exact render={({ match }) => (
             <VerifyUser userId={match.params.userId} />
           )} />
-
+          <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/error" exact component={ErrorPage} />
-
-          {jwt.decode(localStorage.getItem('jwt-token')) ?
-            (<Route path="/Dashboard" exact component={Dashboard} />) : (<div></div>)}
         </div>
       </Router>
     );

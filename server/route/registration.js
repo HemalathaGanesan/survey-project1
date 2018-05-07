@@ -4,6 +4,8 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const registration = require('../models/registration.js');
 const passport = require('passport')
+const jwt = require('jsonwebtoken')
+const config = require('../config/keys')
 
 // get request
 router.get('/', (req, res) => {
@@ -25,10 +27,16 @@ router.get('/auth/google', passport.authenticate('google', {
 );
 
 router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {
+  // console.log("req.user", req.user);
   if (req.user.hospital) {
-    res.redirect("http://localhost:3000/Dashboard");
+    let token = jwt.sign(req.user.toJSON(), config.secretKey, {
+      expiresIn: "1h"
+    });
+    res.cookie('jwt', token);
+    res.redirect("http://localhost:3000/registerWithGoogle");
   } else {
-    res.redirect(`http://localhost:3000/RegisterWithGoogle/${req.user._id}`)
+    // res.cookie('jwt', token);
+    res.redirect(`http://localhost:3000/registerWithGoogle/${req.user._id}`)
   }
 })
 
@@ -60,42 +68,40 @@ router.post('/', (req, res) => {
               register.save()
                 .then(result => {
                   // send confirmation mail 
-                  // const url = `http://localhost:3000/verifyUser/${result._id}`;
-                  // const mailAccount = {
-                  //   user: 'test.skiploop@gmail.com',
-                  //   password: 'Test@123',
-                  // }
+                  const url = `http://localhost:3000/verifyUser/${result._id}`;
+                  const mailAccount = {
+                    user: 'test.skiploop@gmail.com',
+                    password: 'Test@123',
+                  }
 
-                  // nodemailer.createTestAccount((err, account) => {
-                  //   let transporter = nodemailer.createTransport({
-                  //     host: 'smtp.gmail.com',
-                  //     port: 587,
-                  //     secure: false,
-                  //     auth: {
-                  //       user: mailAccount.user,
-                  //       pass: mailAccount.password
-                  //     }
-                  //   });
+                  nodemailer.createTestAccount((err, account) => {
+                    let transporter = nodemailer.createTransport({
+                      host: 'smtp.gmail.com',
+                      port: 587,
+                      secure: false,
+                      auth: {
+                        user: mailAccount.user,
+                        pass: mailAccount.password
+                      }
+                    });
 
-                  //   let mailOptions = {
-                  //     from: `"Confirm mail" <${mailAccount.user}>`,
-                  //     to: req.body.email,
-                  //     subject: 'Confirm Email',
-                  //     html: `hello!! Please click this link to confirm your email: <a href="${url}">${url}</a>`,
-                  //   };
+                    let mailOptions = {
+                      from: `"Confirm mail" <${mailAccount.user}>`,
+                      to: req.body.email,
+                      subject: 'Confirm Email',
+                      html: `Hello!! <br />Please click this link to confirm your email: <a href="${url}">${url}</a>`,
+                    };
 
-                  //   transporter.sendMail(mailOptions, (error, info) => {
-                  //     if (error) {
-                  //       return console.log(error);
-                  //     }
-                  //     console.log('Message sent: %s', info.messageId);
-                  //     console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-
-                  //     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-                  //     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-                  //   });
-                  // })
-
+                    transporter.sendMail(mailOptions, (error, info) => {
+                      if (error) {
+                        return console.log(error);
+                      }
+                      console.log('Message sent: %s', info.messageId);
+                      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+                      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+                      // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+                    });
+                  })
                   res.json({
                     message: "Registered succesfully"
                   })
@@ -109,22 +115,30 @@ router.post('/', (req, res) => {
 });
 
 
-router.put('/:userId', (req, response) => {
+router.put('/:userId', (req, res) => {
   registration.findOne({ _id: req.params.userId })
     .then(data => {
       if (data.hospital) {
-        response.json({
-          message: "failed, hospital not updated",
+        res.json({
+          message: "Failed, hospital not updated",
           success: false
         })
-
       } else {
         registration.findByIdAndUpdate({ _id: req.params.userId }, req.body)
-          .then(result => {
-            response.json({
-              message: "account updated",
-              success: true
-            })
+          .then(() => {
+            registration.findOne({ _id: req.params.userId })
+              .then(result => {
+                // console.log("result", result)
+                let token = jwt.sign(result.toJSON(), config.secretKey, {
+                  expiresIn: "1h"
+                });
+                // res.cookie('jwt', token);
+                res.json({
+                  message: "Account updated, Wait.. Redirecting to Login page",
+                  success: true,
+                  token: token
+                })
+              })
           })
       }
     })

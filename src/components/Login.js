@@ -61,10 +61,10 @@ class Login extends Component {
       .then(data => {
         if (data.success) {
           localStorage.setItem('jwt-token', data.token);
-          this.refs.registrationForm.reset();
           this.props.history.push("/dashboard");
+          // this.refs.loginForm.reset();
         } else {
-          this.setState({ msg: data.message })
+          this.setState({ errorMsg: data.message })
           setTimeout(() => this.setState({ errorMsg: "" }), 5000);
         }
       })
@@ -82,28 +82,24 @@ class Login extends Component {
               <div className="card-body">
 
                 <form onSubmit={this.storeData.bind(this)} ref="loginForm">
-                  <p style={{ color: 'red' }}>Note: * field's are mandatory</p>
                   <div className="form-group row">
-                    <label htmlFor="email" className="col-sm-4 col-form-label required">Email</label>
+                    <label htmlFor="email" className="col-sm-4 col-form-label">Email</label>
                     <div className="col-sm-8">
                       <input type="email" className="form-control" id="email" ref="email" placeholder="abcde@email.com" required />
                     </div>
                   </div>
-
                   <div className="form-group row">
-                    <label htmlFor="password" className="col-sm-4 col-form-label required">Password</label>
+                    <label htmlFor="password" className="col-sm-4 col-form-label">Password</label>
                     <div className="col-sm-8">
                       <input type="password" className="form-control" id="password" ref="password" placeholder="Password" required />
-                      {/* <small><p className="text-left">password should atleast 8 characters include </p></small> */}
                     </div>
                   </div>
-                  <a href="http://localhost:3001/api/registration/auth/google" className="google-button">Google</a>
                   <button type="submit" className="btn btn-primary">Login</button>
                 </form>
-
               </div>
             </div>
             <p>Dont't have account? Register <Link to="/registration"> Here</Link></p>
+            <p>Login with <a href="http://localhost:3001/api/registration/auth/google"><button className="btn fa fa-google button-google"> Google</button></a></p>
             {this.state.isVerified && <div className="alert alert-danger" role="alert">Mail not Verified</div>}
             {this.state.errorMsg && <div className="alert alert-danger" role="alert">{this.state.errorMsg}</div>}
           </div>
