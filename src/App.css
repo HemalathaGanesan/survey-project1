@@ -9,3 +9,41 @@
   padding: 3px;
   border-radius: 4px;
 }
+.container-fluid{
+    /* background-color:cadetblue; */
+    width: 100%;
+    height: 499px;
+   
+}
+.header{
+    
+    background-color:#179d82;
+    width:100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
+}
+.header p{
+    color: white;
+    font-size: 42px;
+    padding-top: 19px;
+}
+.btn{
+    height: 40px;
+    margin-top: 31px;
+}
+.card{
+    margin-top: 25px;
+    background-color: ghostwhite;
+    height: 290px;
+}
+.row{
+    justify-content: center;
+}
+.card-text p{
+    margin-bottom: 3rem;
+}
+.btn-primary{
+    background-color: #179d82;
+    border-color: #179d82;
+}
