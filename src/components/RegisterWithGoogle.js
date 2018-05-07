@@ -7,13 +7,32 @@ import { Redirect } from 'react-router-dom';
 class RegisterWithGoogle extends Component {
   constructor() {
     super();
-    this.state = {}
+    this.state = {
+      isHospital: false
+    }
   }
 
   componentWillMount() {
-    console.log("document.cookie", document.cookie)
+    // fetch(`http://localhost:3001/api/registration/${this.props.userId}`, {
+    //   headers: new Headers({
+    //     'Content-Type': 'application/json'
+    //   }),
+    //   method: 'GET'
+    // }).then(res => res.json())
+    //   .then(data => {
+    //     console.log("component will",data);
+    //     if (data.success) {
+    //       localStorage.setItem('jwt-token', data.token);
+    //       window.location.href = "/dashboard";
+    //     }
+    //   })
+    // this.setState({ isHospital: true })
+    // console.log("cookie in props", this.props)
+    // const { cookies } = this.props;
+    // console.log(cookies)
+    // console.log("document.cookie", document.cookie);
+    // // console.log("cookie.get", Cookies.get("jwt"));    
     if (document.cookie) {
-      console.log("if cond")
       localStorage.setItem('jwt-token', document.cookie.split('=')[1]);
       window.location.href = '/dashboard';
     }
@@ -36,6 +55,8 @@ class RegisterWithGoogle extends Component {
       method: 'PUT'
     }).then(res => res.json())
       .then(data => {
+        console.log(data)
+        console.log(document.cookie)        
         if (data.success) {
           localStorage.setItem('jwt-token', data.token);
           // localStorage.setItem('jwt-token',document.cookie.split('=')[1])
@@ -58,29 +79,29 @@ class RegisterWithGoogle extends Component {
     }
     return (
       (this.props.userId) &&
-      (<div className="container text-center registration-container">
-        <div className="row">
-          <div className="col"></div>
-          <div className="col-md-6">
-            <div className="card border-dark">
-              <h4 className="card-header">One more step</h4>
-              <div className="card-body">
-                <form onSubmit={this.storeData.bind(this)} ref="registrationForm">
-                  <div className="form-group row">
-                    <label htmlFor="hospital" className="col-sm-4 col-form-label">Hospital</label>
-                    <div className="col-sm-8">
-                      <input type="text" className="form-control" id="hospital" ref="hospital" placeholder="Hospital" required />
+        (<div className="container text-center registration-container">
+          <div className="row">
+            <div className="col"></div>
+            <div className="col-md-6">
+              <div className="card border-dark">
+                <h4 className="card-header">One more step</h4>
+                <div className="card-body">
+                  <form onSubmit={this.storeData.bind(this)} ref="registrationForm">
+                    <div className="form-group row">
+                      <label htmlFor="hospital" className="col-sm-4 col-form-label">Hospital</label>
+                      <div className="col-sm-8">
+                        <input type="text" className="form-control" id="hospital" ref="hospital" placeholder="Hospital" required />
+                      </div>
                     </div>
-                  </div>
-                  <button type="submit" className="btn btn-primary">Register</button>
-                </form>
+                    <button type="submit" className="btn btn-primary">Register</button>
+                  </form>
+                </div>
               </div>
+              {this.state.msg && <div className="alert alert-success" role="alert">{this.state.msg}</div>}
             </div>
-            {this.state.msg && <div className="alert alert-success" role="alert">{this.state.msg}</div>}
+            <div className="col"></div>
           </div>
-          <div className="col"></div>
-        </div>
-      </div>)
+        </div>)
     )
   }
 }

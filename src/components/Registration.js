@@ -59,7 +59,7 @@ class Registration extends Component {
 
 
   validatePass(e) {
-    console.log(this.refs.password.value);
+    console.log(this.refs.password.value)
     if (this.refs.password.value === '') {
       this.setState({ isValidPass1: false, isValidPass2: false, isValidPass3: false });
     } else if (this.refs.password.value.length < 8) {
@@ -74,14 +74,17 @@ class Registration extends Component {
       this.setState({
         isValidPass3: true, isValidPass1: false, isValidPass2: false
       })
+    // } else if (!this.refs.password.value.match(/[@._-]/)) {
+    //   this.setState({
+    //     isValidPass4: true
+    //   })
     } else {
       this.setState({
-        isValidPass1: false, isValidPass2: false, isValidPass3: false
+        isValidPass1: false, isValidPass2: false, isValidPass3: false, isValidPass4: false
       })
     }
   }
   validateConfPass(e) {
-    console.log(this.refs.confirmPassword.value)
     if (this.refs.confirmPassword.value !== '') {
       this.setState({ isValidConfPass: false });
     } else this.setState({ isValidConfPass: false });
@@ -109,9 +112,10 @@ class Registration extends Component {
                     <label htmlFor="password" className="col-sm-4 col-form-label">Password</label>
                     <div className="col-sm-8">
                       <input type="password" className="form-control" id="password" ref="password" placeholder="Password" required onChange={this.validatePass.bind(this)} />
-                      {this.state.isValidPass1 && <div className="alert alert-danger" role="alert">password must atleast 8 characters!</div>}
-                      {this.state.isValidPass2 && <div className="alert alert-danger" role="alert">1 uppercase!</div>}
-                      {this.state.isValidPass3 && <div className="alert alert-danger" role="alert">1 number!</div>}
+                      {this.state.isValidPass1 && <div className="alert alert-danger" role="alert">Password must atleast 8 characters!</div>}
+                      {this.state.isValidPass2 && <div className="alert alert-danger" role="alert"> - atleast 1 uppercase!</div>}
+                      {this.state.isValidPass3 && <div className="alert alert-danger" role="alert"> - atleast 1 number!</div>}
+                      {/* {this.state.isValidPass3 && <div className="alert alert-danger" role="alert">password must atleast 1 speccial characters(@ . _ -)</div>} */}
                     </div>
                   </div>
 
@@ -119,7 +123,7 @@ class Registration extends Component {
                     <label htmlFor="confirmPassword" className="col-sm-4 col-form-label">Confirm Password</label>
                     <div className="col-sm-8">
                       <input type="password" className="form-control" id="confirmPassword" ref="confirmPassword" placeholder="Confirm Password" required onChange={this.validateConfPass.bind(this)} />
-                      {this.state.isValidConfPass && <div className="alert alert-danger" role="alert">password didn't match!</div>}
+                      {this.state.isValidConfPass && <div className="alert alert-danger" role="alert">Password didn't match!</div>}
                     </div>
                   </div>
 
@@ -136,7 +140,7 @@ class Registration extends Component {
 
               </div>
             </div>
-            <p>Already have account? Login <Link to="/login"> Here</Link></p>
+            <p>Already have account? Login <Link to="/"> Here</Link></p>
             <p>Register with <a href="http://localhost:3001/api/registration/auth/google"><button className="btn fa fa-google button-google"> Google</button></a></p>
             {this.state.mailExistMsg && <div className="alert alert-danger" role="alert">{this.state.mailExistMsg}</div>}
             {this.state.succesMsg && <div className="alert alert-success" role="alert">{this.state.succesMsg}</div>}

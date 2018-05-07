@@ -49,10 +49,10 @@ passport.use(new GoogleStrategy({
           googleId: profile.id,
           email: profile.emails[0].value
         }).then((result) => {
-          console.log("new user created")
+          console.log("new user created");
+          done(null, result);
         })
       }
     })
-
 })
 )

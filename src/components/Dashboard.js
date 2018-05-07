@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import { BrowserRouter as Router, Route, NavLink } from "react-router-dom";
 
+
 class Dashboard extends Component {
   constructor(){
     super();
@@ -19,6 +20,8 @@ class Dashboard extends Component {
   removeToken() {
     console.log('remove')
     localStorage.removeItem("jwt-token");
+    document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    // sessionStorage.removeItem("jwt-token");
     // res.clearCookie("key");
     window.location.reload();
   }
@@ -56,6 +59,7 @@ class Dashboard extends Component {
           </div>
           {forms}
             </div>) : (<Redirect to="/" />)}
+
       </div>
     )
   }
