@@ -50,6 +50,7 @@ passport.use(new GoogleStrategy({
           email: profile.emails[0].value
         }).then((result) => {
           console.log("new user created")
+          done(null,result);
         })
       }
     })
