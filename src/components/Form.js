@@ -28,8 +28,10 @@ class Form extends React.Component {
     let formData={
       title:this.state.title,
       email:userEmail,
+      // hospital:this.props.hospital,
       field:survey.data
     }
+    // console.log(this.state.hospital)
    fetch("http://localhost:3001/api/survey",{
      method:"POST",
      body:JSON.stringify(formData),
@@ -41,6 +43,7 @@ class Form extends React.Component {
    })
  };
   render() {
+    console.log(this.props)
     return (
       <div>
         {(localStorage.getItem('jwt-token')) ?
