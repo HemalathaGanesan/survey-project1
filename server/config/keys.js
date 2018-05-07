@@ -2,8 +2,8 @@
 
 module.exports = {
   google: {
-    clientID: '118390093043-lpeq3cpe5e6nu8c9ua2fpa08aaqnv5jr.apps.googleusercontent.com',
-    clientSecret: 'l8tFK9y-jJ4la08pfdoxDzUF'
+    clientID: '128035657608-7dtr51u9ouapjfs72rj8u8r5l180elcf.apps.googleusercontent.com',
+    clientSecret: 'xakXlEnS13K4EVHQaDmXL5Db'
   },
   session: {
     cookieKey: 'surveyproject'
