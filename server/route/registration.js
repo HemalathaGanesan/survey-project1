@@ -13,10 +13,10 @@ router.get('/', (req, res) => {
     .then(data => res.json(data))
 });
 
-router.get('/:email', (req, res) => {
-  registration.find({ email: req.params.email })
-    .then(data => {
-      res.json(data)
+router.get('/:userId', (req, res) => {
+  registration.find({ _id: req.params.userId })
+    .then(result => {
+      res.json(result)
     })
 });
 
@@ -33,7 +33,7 @@ router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) 
       expiresIn: "1h"
     });
     res.cookie('jwt', token);
-    res.redirect("http://localhost:3000/registerWithGoogle");
+    res.redirect(`http://localhost:3000/registerWithGoogle/`);
   } else {
     // res.cookie('jwt', token);
     res.redirect(`http://localhost:3000/registerWithGoogle/${req.user._id}`)
@@ -45,6 +45,7 @@ router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) 
 router.post('/', (req, res) => {
   registration.find({ email: req.body.email })
     .then(user => {
+      console.log(user)
       if (user.length >= 1) {
         return res.json({
           message: "Mail already exists",
@@ -114,13 +115,13 @@ router.post('/', (req, res) => {
     })
 });
 
-
-router.put('/:userId', (req, res) => {
+// put request
+router.put('/:userId', (req, resp) => {
   registration.findOne({ _id: req.params.userId })
     .then(data => {
       if (data.hospital) {
-        res.json({
-          message: "Failed, hospital not updated",
+        resp.json({
+          message: "Failed, hospital already updated",
           success: false
         })
       } else {
@@ -132,8 +133,8 @@ router.put('/:userId', (req, res) => {
                 let token = jwt.sign(result.toJSON(), config.secretKey, {
                   expiresIn: "1h"
                 });
-                // res.cookie('jwt', token);
-                res.json({
+                // resp.cookie('jwt', token);
+                resp.json({
                   message: "Account updated, Wait.. Redirecting to Login page",
                   success: true,
                   token: token
@@ -142,7 +143,7 @@ router.put('/:userId', (req, res) => {
           })
       }
     })
-    .catch(err => res.json(err))
+    .catch(err => resp.json(err))
 })
 
 router.put('/verifyUser/:userId', (req, res) => {
