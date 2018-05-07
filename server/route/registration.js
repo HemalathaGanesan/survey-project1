@@ -52,6 +52,7 @@ router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) 
 router.post('/', (req, res) => {
   registration.find({ email: req.body.email })
     .then(user => {
+      console.log(user)
       if (user.length >= 1) {
         return res.json({
           message: "Mail already exists",

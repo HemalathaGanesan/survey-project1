@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Cookies } from 'react-cookie'
 // import Login from './Login'
 // import Dashboard from './Dashboard';
 
