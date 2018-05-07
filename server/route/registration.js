@@ -16,14 +16,7 @@ router.get('/', (req, res) => {
 router.get('/:userId', (req, res) => {
   registration.find({ _id: req.params.userId })
     .then(result => {
-      let token = jwt.sign(result[0].toJSON(), config.secretKey, {
-        expiresIn: "1h"
-      });
-      res.json({
-        message: "Account updated",
-        success: true,
-        token: token
-      })
+      res.json(result)
     })
 });
 

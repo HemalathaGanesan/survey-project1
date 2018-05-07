@@ -13,19 +13,15 @@ class RegisterWithGoogle extends Component {
   }
 
   componentWillMount() {
-    // fetch(`http://localhost:3001/api/registration/${this.props.userId}`, {
-    //   headers: new Headers({
-    //     'Content-Type': 'application/json'
-    //   }),
-    //   method: 'GET'
-    // }).then(res => res.json())
-    //   .then(data => {
-    //     console.log("component will",data);
-    //     if (data.success) {
-    //       localStorage.setItem('jwt-token', data.token);
-    //       window.location.href = "/dashboard";
-    //     }
-    //   })
+    fetch(`http://localhost:3001/api/registration/${this.props.userId}`, {
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      method: 'GET'
+    }).then(res => res.json())
+      .then(data => {
+        this.setState({data: data[0]})
+      })
     // this.setState({ isHospital: true })
     // console.log("cookie in props", this.props)
     // const { cookies } = this.props;
@@ -44,6 +40,13 @@ class RegisterWithGoogle extends Component {
       "hospital": this.refs.hospital.value
     }
     // console.log(data)
+    this.props.dispatch({
+      type: 'REGISTRATION_WITH_G_DATA',
+      payload: {
+        email: this.state.data.email,
+        hospital: this.refs.hospital.value
+      }
+    })
     this.putReq(data);
   }
   putReq(data) {
