@@ -7,20 +7,9 @@ import RegisterWithGoogle from './components/RegisterWithGoogle';
 import VerifyUser from './components/VerifyUser';
 import Dashboard from './components/Dashboard';
 import ErrorPage from './components/ErrorPage'
-import jwt from 'jsonwebtoken';
+import Form from "./components/form";
+// import jwt from 'jsonwebtoken';
 import './App.css';
-
-
-// const Verify =(nextState,replace) => {
-//   if (!localStorage.getItem('jwt-token')){
-//     replace({
-//       pathname:'/login',
-//       state:{
-//         nextPathname:nextState.location.pathname
-//       }
-//     })
-//   }
-// }
 
 class App extends Component {
   
@@ -29,7 +18,7 @@ class App extends Component {
       <Router>
         <div>
           <Route path="/registration" exact component={Registration} />
-          <Route path="/login" exact component={Login} />
+          <Route path="/" exact component={Login} />
           <Route path="/registerWithGoogle/:userId" exact render={({ match }) => (
             <RegisterWithGoogle userId={match.params.userId} />
           )} />
@@ -37,7 +26,10 @@ class App extends Component {
           <Route path="/verifyUser/:userId" exact render={({ match }) => (
             <VerifyUser userId={match.params.userId} />
           )} />
-          <Route path="/dashboard" exact component={Dashboard} />
+           <Route path="/dashboard" exact component={Dashboard} /> 
+          {/* <Route path="/"  exact component={HomePage} /> */}
+          <Route path="/dashboard/:forms" exact component={Form} />
+
           <Route path="/error" exact component={ErrorPage} />
         </div>
       </Router>
@@ -46,3 +38,18 @@ class App extends Component {
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

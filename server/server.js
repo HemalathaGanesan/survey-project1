@@ -12,8 +12,23 @@ const cookieParser = require('cookie-parser')
 const app = express();
 
 // connect to mongodb
-mongoose.connect('mongodb://localhost/survey_project');
+mongoose.connect('mongodb://localhost/survey');
+mongoose.connection
+  .once("open", function () {
+    console.log("connection success");
+  })
+  .on("error", function (err) {
+    console.log("Connection Error", err);
+  });
+
 mongoose.Promise = global.Promise;
+
+// use headers
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
+});
 
 // cookie time-limit
 app.use(cookieSession({
@@ -36,17 +51,14 @@ app.use(cors())
 // use cookies
 app.use(cookieParser())
 
-// use headers
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  next();
-});
+
 
 // use routes
 app.use('/api/registration', require('./route/registration.js'));
 app.use('/api/login', require('./route/login.js'));
-app.use('/api/dashboard', require('./route/dashboard.js'));
+// app.use('/api/dashboard', require('./route/dashboard.js'));
+app.use("/api", require("./route/api"))
+
 
 // hadling errors
 app.use((err, req, res, next) => {
@@ -55,3 +67,24 @@ app.use((err, req, res, next) => {
 })
 // server listening
 app.listen(3001, () => console.log("server started"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
