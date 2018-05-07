@@ -3,6 +3,8 @@ import React from "react";
 import { Redirect } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import * as Survey from "survey-react";
+import { connect } from "react-redux";
+
 
 class Form extends React.Component {
   constructor() {
@@ -51,4 +53,8 @@ class Form extends React.Component {
 
   }
 }
-export default Form
+const mapStateToProps = (state) => {
+  return state.registrationReducer;
+}
+
+export default connect(mapStateToProps)(Form);

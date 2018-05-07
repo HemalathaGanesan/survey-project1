@@ -7,7 +7,7 @@ import RegisterWithGoogle from './components/RegisterWithGoogle';
 import VerifyUser from './components/VerifyUser';
 import Dashboard from './components/Dashboard';
 import ErrorPage from './components/ErrorPage'
-import Form from "./components/form";
+import Form from "./components/Form";
 // import jwt from 'jsonwebtoken';
 import './App.css';
 

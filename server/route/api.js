@@ -5,7 +5,6 @@ const Surveyform=require('../models/surveyForm')
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
-
 router.post("/survey",function(req,res){
     var data=req.body;
     Survey.create({value:data}).then(()=>{
@@ -45,6 +44,7 @@ router.get('/formname',function(req,res){
 
 router.get('/forms/:id',function(req,res){
     var form=req.params.id;
+    
     Surveyform.aggregate([
         {
           $match: {

@@ -10,6 +10,11 @@ const registrationReducer = (state = {
       password: action.payload.password,
       hospital: action.payload.hospital
     }
+    case 'REGISTRATION_WITH_G_DATA': return {
+      ...state,
+      email: action.payload.email,
+      hospital: action.payload.hospital
+    }
     default: return state
   }
 }
