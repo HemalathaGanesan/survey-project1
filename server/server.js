@@ -6,7 +6,7 @@ const passport = require('passport');
 const cookieSession = require('cookie-session');
 const passportSetup = require('./config/passport-setup');
 const keys = require('./config/keys');
-const CookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 
 // express app
 const app = express();
@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 app.use(cors())
 
 // use cookies
-app.use(CookieParser())
+app.use(cookieParser())
 
 // use headers
 app.use((req, res, next) => {
@@ -48,5 +48,10 @@ app.use('/api/registration', require('./route/registration.js'));
 app.use('/api/login', require('./route/login.js'));
 app.use('/api/dashboard', require('./route/dashboard.js'));
 
+// hadling errors
+app.use((err, req, res, next) => {
+  console.log(err)
+  res.status(500).send({ error: err.message })
+})
 // server listening
 app.listen(3001, () => console.log("server started"))

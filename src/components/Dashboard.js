@@ -27,6 +27,7 @@ class Dashboard extends Component {
   }
   removeToken() {
     localStorage.removeItem("jwt-token");
+    // res.clearCookie("key");
     window.location.reload();
   }
 

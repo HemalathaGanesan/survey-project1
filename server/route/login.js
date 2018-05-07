@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
           // resp == true || fasle
           if (resp) {
             let token = jwt.sign(result.toJSON(), config.secretKey, {
-              expiresIn: "10m"
+              expiresIn: "1h"
             });
             res.json({
               success: true,
