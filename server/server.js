@@ -60,9 +60,14 @@ app.use('/api/dashboard', require('./route/dashboard.js'));
 // app.use("/api", require("./route/api"))
 
 // hadling errors
-app.use((err, req, res, next) => {
-  console.log(err)
-  res.status(500).send({ error: err.message })
+app.use((req, res, next) => {
+  const error = new Error("NOT FOUND");
+  error.status = 404;
+  next(error);
+})
+app.use((error, req, res, next) => {
+  res.status(error.status || 500)
+  res.send({ error: error.message })
 })
 
 // server listening

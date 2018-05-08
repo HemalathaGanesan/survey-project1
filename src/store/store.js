@@ -2,9 +2,9 @@ import { createStore } from 'redux';
 import reducer from '../reducers/reducer'
 
 const store = createStore(reducer);
-// console.log(store.getState())
+console.log("cuurent store", store.getState())
 
-// store.subscribe(() => {
-//     console.log("data updated", store.getState())
-// })
+store.subscribe(() => {
+    console.log("data updated", store.getState())
+})
 export default store;

@@ -1,48 +1,51 @@
 .registration-container {
-  margin-top: 100px;
+    margin-top: 100px;
 }
 
-.google-button {
-  float: left;
-  font-size: x-large;
-  border: 1px solid;
-  padding: 3px;
-  border-radius: 4px;
+.login-card, .card-registraion {
+    box-shadow: 10px 10px 20px 0px rgba(0, 0, 0, 0.75);
+    /* opacity: 0.8; */
+    /* filter: alpha(opacity=60); */
 }
-.survey{
-    /* background-color:cadetblue; */
+
+.survey {
     width: 100%;
-    /* height: 499px; */
-   
 }
-.survey .header{    
-    background-color:#179d82;
-    width:100%;
+
+.survey .header {
+    background-color: #179d82;
+    width: 100%;
     height: 100px;
     display: flex;
     justify-content: space-around;
 }
-.survey .header p{
+
+.survey .header p {
     color: white;
     font-size: 1rem;
     margin-top: 30px;
 }
-.survey .btn{
+
+.survey .btn {
     height: 40px;
     margin-top: 31px;
 }
-.form-field .card{
+
+.form-field .card {
     margin-top: 25px;
     background-color: ghostwhite;
     /* height: 290px; */
 }
-.form-field .row{
+
+.form-field .row {
     justify-content: center;
 }
-.form-field .card-text p{
+
+.form-field .card-text p {
     margin-bottom: 3rem;
 }
-.form-field .btn-primary{
+
+.form-field .btn-primary {
     background-color: #179d82;
     border-color: #179d82;
 }

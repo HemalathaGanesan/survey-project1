@@ -12,7 +12,6 @@ const registrationReducer = (state = {
     }
     case 'REGISTRATION_WITH_G_DATA': return {
       ...state,
-      email: action.payload.email,
       hospital: action.payload.hospital
     }
     default: return state

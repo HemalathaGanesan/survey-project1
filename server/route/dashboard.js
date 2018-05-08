@@ -7,74 +7,88 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/keys');
 
 // get request
-router.get('/formname', function (req, res) {
-  // jwt.verify(req.token, config.secretKey, (err, authData) => {
-  //   if (err) {
-  //     // res.status(403).json({
-  //     //   message: "token expired"
-  //     // });
-  //     res.redirect("/")
-  //   } else {
-  //     console.log("else")
-  //     res.json({
-  //       msg: "post request",
-  //       authData
-  //     })
-  //   }
-  // });
-  Surveyform.find()
-    .then((data) => {
-      var ids = data.map((value) => {
-        return value._id;
+router.get('/formname', verifyToken, function (req, res) {
+  jwt.verify(req.token, config.secretKey, (err, authData) => {
+    if (err) {
+      res.status(403).json({
+        success: true,
+        message: "token expired"
       })
-      res.send(ids)
-    })
+    } else {
+      Surveyform.find()
+        .then((data) => {
+          var ids = data.map((value) => {
+            return value._id;
+          })
+          res.status(200).send(ids)
+        })
+    }
+  })
 });
 
-router.get('/forms/:id', passport.authenticate('jwt', { session: false }), function (req, res) {
-  var form = req.params.id;
-  Surveyform.aggregate([
-    {
-      $match: {
-        _id: form
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-      }
+router.get('/forms/:id', verifyToken, function (req, res) {
+  jwt.verify(req.token, config.secretKey, (err, authData) => {
+    if (err) {
+      res.status(403).json({
+        success: true,
+        message: "token expired"
+      })
+    } else {
+      var form = req.params.id;
+      Surveyform.aggregate([
+        {
+          $match: {
+            _id: form
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+          }
+        }
+      ]).then((data) => {
+        res.status(200).send(data[0])
+      })
     }
-  ]).then((data) => {
-    res.send(data[0])
   })
+
 })
 
 // post request
-router.post("/survey", passport.authenticate('jwt', { session: false }), function (req, res) {
-  var data = req.body;
-  Survey.create({ value: data })
-    .then(() => {
-      res.send({
-        status: 'success'
+router.post("/survey", verifyToken, function (req, res) {
+  jwt.verify(req.token, config.secretKey, (err, authData) => {
+    if (err) {
+      res.status(403).json({
+        success: true,
+        message: "token expired"
       })
-    })
-    .catch(err => {
-      res.send({
-        status: 'failure'
-      })
-    })
-})
+    } else {
+      var data = req.body;
+      Survey.create({ value: data })
+        .then(() => {
+          res.status(201).send({
+            status: 'success'
+          })
+        })
+        .catch(err => {
+          res.status(500).send({
+            status: 'failure'
+          })
+        })
+    }
+  })
+});
 
 router.post('/store', function (req, res) {
   var data = req.body;
   Surveyform.create({ _id: 'sample', form: data })
     .then(() => {
-      res.send({
+      res.status(201).send({
         status: 'success'
       })
     })
     .catch(err => {
-      res.send({
+      res.status(500).send({
         status: 'failure'
       })
     })

@@ -11,7 +11,7 @@ const config = require('../config/keys');
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
   registration.find({})
     .then(data => res.status(200).json(data))
-    .catch(err => res.status(500).json({ error: err }))    
+    .catch(err => res.status(500).json({ error: err }))
 });
 
 router.get('/:userId', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -32,7 +32,7 @@ router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) 
   // console.log("req.user", req.user);
   if (req.user.hospital) {
     let token = jwt.sign(req.user.toJSON(), config.secretKey, {
-      expiresIn: "1h"
+      expiresIn: "20s"
     });
     res.cookie('jwt', token);
     res.redirect(`http://localhost:3000/registerWithGoogle/`);
@@ -46,7 +46,7 @@ router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) 
 router.post('/', (req, res) => {
   registration.find({ email: req.body.email })
     .then(user => {
-      // console.log(user)
+      // console.log(user);
       if (user.length >= 1) {
         return res.status(400).json({
           message: "Mail already exists",
@@ -69,6 +69,8 @@ router.post('/', (req, res) => {
               })
               register.save()
                 .then(result => {
+                  // console.log("result", result)
+                  
                   // send confirmation mail 
                   const url = `http://localhost:3000/verifyUser/${result._id}`;
                   const mailAccount = {
@@ -89,11 +91,15 @@ router.post('/', (req, res) => {
                       from: `"Confirm Email" <${mailAccount.user}>`,
                       to: req.body.email,
                       subject: 'Confirm Your Email',
-                      html: `Hello!! <br />Please click this link to confirm your email: <a href="${url}">${url}</a>`,
+                      html: `Hello !!<br/>Please click this link to confirm your email: <a href="${url}">${url}</a>`,
                     };
                     transporter.sendMail(mailOptions, (error, info) => {
                       if (error) {
-                        return console.log(error);
+                        // return console.log(error);
+                        return res.status(500).json({ 
+                          error: error,
+                          message: "email can't be sent" 
+                        })
                       }
                       console.log('Message sent: %s', info.messageId);
                       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
@@ -111,10 +117,11 @@ router.post('/', (req, res) => {
         });
       }
     })
+    .catch(err => res.status(500).json({ error: err }))
 });
 
 // put request
-router.put('/:userId', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.put('/:userId', (req, res) => {
   registration.findOne({ _id: req.params.userId })
     .then(data => {
       if (data.hospital) {
@@ -125,11 +132,11 @@ router.put('/:userId', passport.authenticate('jwt', { session: false }), (req, r
       } else {
         registration.findByIdAndUpdate({ _id: req.params.userId }, req.body)
           .then(() => {
-            registration.findOne({ _id: req.params.userId })
+            registration.findOne({ hospital: req.body.hospital })
               .then(result => {
                 // console.log("result", result)
                 let token = jwt.sign(result.toJSON(), config.secretKey, {
-                  expiresIn: "1h"
+                  expiresIn: "20s"
                 });
                 // res.cookie('jwt', token);
                 res.status(201).json({
@@ -145,7 +152,7 @@ router.put('/:userId', passport.authenticate('jwt', { session: false }), (req, r
     .catch(err => res.status(500).json(err))
 })
 
-router.put('/verifyUser/:userId', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.put('/verifyUser/:userId', (req, res) => {
   registration.findByIdAndUpdate({ _id: req.params.userId })
     .then(result => {
       // console.log("result", result)
@@ -154,14 +161,14 @@ router.put('/verifyUser/:userId', passport.authenticate('jwt', { session: false 
           .then(updatedResult => {
             // console.log("updatedresult", updatedResult);
             res.status(200).json({
-              message: "User verifed susscfully",
+              message: "User verified susscfully",
               success: true
             })
           })
           .catch(err => res.status(500).json({ error: err }))
       } else {
         res.status(401).json({
-          message: "User already verifed",
+          message: "Already verified",
           success: false
         })
       }

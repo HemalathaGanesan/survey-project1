@@ -15,33 +15,34 @@ class Form extends React.Component {
     }
   }
   componentWillMount() {
-    console.log(this.props.location.pathname)
     var name = (this.props.location.pathname).slice(11);
-    {
-      (localStorage.getItem('jwt-token')) ?
-        (fetch(`http://localhost:3001/api/dashboard/forms/${name}`, {
-          method: 'GET',
-          headers: new Headers({
-            'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
-            'Content-Type': 'application/json'
-          }),
-        }).then(data => data.json())
-          .then((result) => {
+    localStorage.getItem('jwt-token') && (
+      fetch(`http://localhost:3001/api/dashboard/forms/${name}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
+          'Content-Type': 'application/json'
+        }),
+      }).then(data => data.json())
+        .then((result) => {
+          if (result.success) {
+            localStorage.removeItem("jwt-token");
+            window.location.href = "/verifyToken";
+          }
+          else {
             this.setState({ surveyJson: result.form, title: name })
-          })
-          .catch(err => console.log(err))) : (<Redirect to="/" />)
-    }
+          }
+        })
+        .catch(err => console.log(err)))
   }
 
   sendDataToServer(survey) {
-    let userEmail = jwt.decode(localStorage.getItem('jwt-token')).email
     let formData = {
       title: this.state.title,
-      email: userEmail,
-      hospital: this.props.hospital,
+      email: jwt.decode(localStorage.getItem('jwt-token')).email,
+      hospital: jwt.decode(localStorage.getItem('jwt-token')).hospital,
       field: survey.data
     }
-    console.log(this.state.hospital)
     fetch("http://localhost:3001/api/dashboard/survey", {
       method: "POST",
       body: JSON.stringify(formData),
@@ -54,7 +55,6 @@ class Form extends React.Component {
       })
   };
   render() {
-    console.log(this.props)
     return (
       <div>
         {(localStorage.getItem('jwt-token')) ?
@@ -64,7 +64,6 @@ class Form extends React.Component {
           />) : (<Redirect to="/" />)}
       </div>
     )
-
   }
 }
 const mapStateToProps = (state) => {
