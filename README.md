@@ -1,5 +1,5 @@
 #  Survey-Project
-Survey Project is a web application designed to review information about hospitals,products etc. This application has been built on MERN stack
+Survey Project is a web application designed to review information about hospitals,products etc. This application has been built on MERN stack.
 
 # Getting Started
 Clone this repository and go to the survey project folder. Run the following command to achieve it.
@@ -23,8 +23,12 @@ $ npm install
 ```
 
 ## Basic understanding of Mongodb
-For Mongodb installation follow this documentation<br /><br />
+For Mongodb installation follow this documentation.<br /><br />
 https://docs.mongodb.com/manual/tutorial/getting-started/
+
+## MongoDB visualisation
+Download Robomongo depending on your OS<br/>
+https://robomongo.org/download
 
 ## Start Mongo server
 ```bash
@@ -42,6 +46,9 @@ https://reactjs.org/
 ```bash
 $ npm start
 ```
+## To get Sample survey form
+Go to ./src/sample.json
+Copy the data present in sample.json and paste it in surveyform collection which is present in survey database.
 
 ## People
 [Dakaraja](https://gitlab.com/daka.raja),
