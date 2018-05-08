@@ -14,22 +14,26 @@ router.post("/survey",function(req,res){
     })
     .catch(err=>{
         res.send({
-            status:'failure'
+            status:'failure',
+            error:err
         })
     })
 })
 
 router.post('/store',function(req,res){
     var data=req.body;
-    Surveyform.create({_id:'sample',form:data}).then(()=>{
+    Surveyform.create({_id:data.name,form:data.form}).then(()=>{
         res.send({
             status:'success'
         })
     })
     .catch(err=>{
+        if(err.code===11000){
         res.send({
-            status:'failure'
+            status:'failure',
+            "error":"The form name is already present"
         })
+    }
     })
 })
 
