@@ -80,7 +80,6 @@ class Login extends Component {
             <div className="card border-dark">
               <h4 className="card-header">Login</h4>
               <div className="card-body">
-
                 <form onSubmit={this.storeData.bind(this)} ref="loginForm">
                   <div className="form-group row">
                     <label htmlFor="email" className="col-sm-4 col-form-label">Email</label>
