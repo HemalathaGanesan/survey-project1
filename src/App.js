@@ -6,15 +6,12 @@ import Login from './components/Login';
 import RegisterWithGoogle from './components/RegisterWithGoogle';
 import VerifyUser from './components/VerifyUser';
 import Dashboard from './components/Dashboard';
-import ErrorPage from './components/ErrorPage'
 import Form from "./components/Form";
-import Formdata from "./components/Formdata";
-
-// import jwt from 'jsonwebtoken';
+import VerifyToken from './components/VerifyToken'
 import './App.css';
 
 class App extends Component {
-  
+
   render() {
     return (
       <Router>
@@ -28,12 +25,12 @@ class App extends Component {
           <Route path="/verifyUser/:userId" exact render={({ match }) => (
             <VerifyUser userId={match.params.userId} />
           )} />
-           <Route path="/dashboard" exact component={Dashboard} /> 
-          {/* <Route path="/"  exact component={HomePage} /> */}
-          <Route path="/dashboard/form/:forms" exact component={Formdata} />
-          <Route path="/dashboard/value/:forms" exact component={Form} />
-
-          <Route path="/error" exact component={ErrorPage} />
+          <Route path="/verifyToken" exact component={VerifyToken} />
+          <Route path="/dashboard" exact component={Dashboard} />
+          {/* <Route path="/dashboard/:forms" exact render={({ match }) => (
+            <Form forms={match.params.forms} />
+          )} /> */}
+          <Route path="/dashboard/:forms" exact component={Form} />
         </div>
       </Router>
     );

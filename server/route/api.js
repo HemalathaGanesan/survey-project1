@@ -1,7 +1,7 @@
-const express=require('express');
-const router=express.Router();
-const Survey=require('../models/survey')
-const Surveyform=require('../models/surveyForm')
+const express = require('express');
+const router = express.Router();
+const Survey = require('../models/survey')
+const Surveyform = require('../models/surveyForm')
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
@@ -72,4 +72,4 @@ router.get('/forms/:id',function(req,res){
     })
 })
 
-module.exports=router;
+module.exports = router;
