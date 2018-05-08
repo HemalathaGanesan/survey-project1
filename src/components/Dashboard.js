@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import jwt from 'jsonwebtoken';
-import { BrowserRouter as Router, Route, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 
 class Dashboard extends Component {
@@ -13,15 +12,28 @@ class Dashboard extends Component {
     }
   }
   componentDidMount() {
-    fetch('http://localhost:3001/api/formname').then(res => res.json()).then(name => {
-      this.setState({ data: name, dataPresent: true })
-    })
+    localStorage.getItem('jwt-token') && (
+      fetch('http://localhost:3001/api/dashboard/formname', {
+        method: 'GET',
+        headers: new Headers({
+          'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
+          'Content-Type': 'application/json'
+        }),
+      }).then(res => res.json())
+        .then(name => {
+          if (name.success) {
+            localStorage.removeItem("jwt-token");
+            window.location.href = "/verifyToken";
+          } else {
+            this.setState({ data: name, dataPresent: true });
+          }
+        })
+        .catch(err => console.log(err)))
   }
+
   removeToken() {
     localStorage.removeItem("jwt-token");
     document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    // sessionStorage.removeItem("jwt-token");
-    // res.clearCookie("key");
     window.location.reload();
   }
 
@@ -48,7 +60,7 @@ class Dashboard extends Component {
           </div>)
       })
     }
-    console.log("token", jwt.decode(localStorage.getItem('jwt-token')))
+
     return (
       <div>
         {(localStorage.getItem('jwt-token')) ?

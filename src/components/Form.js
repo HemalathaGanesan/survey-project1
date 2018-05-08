@@ -9,41 +9,52 @@ import { connect } from "react-redux";
 class Form extends React.Component {
   constructor() {
     super();
-    this.state={
-      surveyJson:JSON,
-      title:'String'
+    this.state = {
+      surveyJson: JSON,
+      title: 'String'
     }
   }
-  componentWillMount(){
-    console.log(this.props.location.pathname)
-    var name=(this.props.location.pathname).slice(11);
-    {(localStorage.getItem('jwt-token')) ?
-          (fetch(`http://localhost:3001/api/forms/${name}`).then(data=>data.json()).then((result)=>{
-            this.setState({surveyJson:result.form,title:name})
-          })) : (<Redirect to="/" />)}
+  componentWillMount() {
+    var name = (this.props.location.pathname).slice(11);
+    localStorage.getItem('jwt-token') && (
+      fetch(`http://localhost:3001/api/dashboard/forms/${name}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
+          'Content-Type': 'application/json'
+        }),
+      }).then(data => data.json())
+        .then((result) => {
+          if (result.success) {
+            localStorage.removeItem("jwt-token");
+            window.location.href = "/verifyToken";
+          }
+          else {
+            this.setState({ surveyJson: result.form, title: name })
+          }
+        })
+        .catch(err => console.log(err)))
   }
 
   sendDataToServer(survey) {
-    let userEmail=jwt.decode(localStorage.getItem('jwt-token')).email
-    let formData={
-      title:this.state.title,
-      email:userEmail,
-      hospital:this.props.hospital,
-      field:survey.data
+    let formData = {
+      title: this.state.title,
+      email: jwt.decode(localStorage.getItem('jwt-token')).email,
+      hospital: jwt.decode(localStorage.getItem('jwt-token')).hospital,
+      field: survey.data
     }
-    console.log(this.state.hospital)
-   fetch("http://localhost:3001/api/survey",{
-     method:"POST",
-     body:JSON.stringify(formData),
-     headers:new Headers({
-       "Content-Type":"application/json"
-     })
-   }).then(data=>data.json())
-   .then(result=>{
-   })
- };
+    fetch("http://localhost:3001/api/dashboard/survey", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: new Headers({
+        'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
+        "Content-Type": "application/json"
+      })
+    }).then(data => data.json())
+      .then(result => {
+      })
+  };
   render() {
-    console.log(this.props)
     return (
       <div>
         {(localStorage.getItem('jwt-token')) ?
@@ -53,7 +64,6 @@ class Form extends React.Component {
           />) : (<Redirect to="/" />)}
       </div>
     )
-
   }
 }
 const mapStateToProps = (state) => {
