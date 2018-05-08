@@ -37,7 +37,7 @@ router.post('/store',function(req,res){
     })
 })
 
-router.get('/formname',function(req,res){
+router.get('/formnames',function(req,res){
     Surveyform.find({}).then((data)=>{
        var ids= data.map((value)=>{
             return value._id;
@@ -48,20 +48,27 @@ router.get('/formname',function(req,res){
 
 router.get('/forms/:id',function(req,res){
     var form=req.params.id;
-    
     Surveyform.aggregate([
         {
           $match: {
             _id:form
           }
-        },
-        {
-          $project: {
-            _id: 0,
-          }
         }
       ]).then((data)=>{
-        res.send(data[0])
+          if(data.length!=0){
+            res.send(data[0])   
+          }else{
+            res.send({
+                "status":'failure',
+                "error":"The form is not found"
+            })
+          }
+    })
+    .catch(err=>{
+        res.send({
+            message:"Internal Server error",
+            error:err
+        })
     })
 })
 

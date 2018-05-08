@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
-import { BrowserRouter as Router, Route, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 
 class Dashboard extends Component {
@@ -13,7 +13,7 @@ class Dashboard extends Component {
     }
   }
   componentDidMount() {
-    fetch('http://localhost:3001/api/formname').then(res => res.json()).then(name => {
+    fetch('http://localhost:3001/api/formnames').then(res => res.json()).then(name => {
       this.setState({ data: name, dataPresent: true })
     })
   }
@@ -38,7 +38,7 @@ class Dashboard extends Component {
                       <h5 className="card-title">{formName}</h5>
                       <p className="card-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
                         standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it
-                to make a type specimen book</p>
+                        to make a type specimen book</p>
                       <NavLink to={`dashboard/${formName}`} className="btn btn-primary">Go to Survey</NavLink>
                     </div>
                   </div>
