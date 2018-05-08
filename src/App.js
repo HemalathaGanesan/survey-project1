@@ -8,6 +8,8 @@ import VerifyUser from './components/VerifyUser';
 import Dashboard from './components/Dashboard';
 import ErrorPage from './components/ErrorPage'
 import Form from "./components/Form";
+import Formdata from "./components/Formdata";
+
 // import jwt from 'jsonwebtoken';
 import './App.css';
 
@@ -28,7 +30,8 @@ class App extends Component {
           )} />
            <Route path="/dashboard" exact component={Dashboard} /> 
           {/* <Route path="/"  exact component={HomePage} /> */}
-          <Route path="/dashboard/:forms" exact component={Form} />
+          <Route path="/dashboard/form/:forms" exact component={Formdata} />
+          <Route path="/dashboard/value/:forms" exact component={Form} />
 
           <Route path="/error" exact component={ErrorPage} />
         </div>

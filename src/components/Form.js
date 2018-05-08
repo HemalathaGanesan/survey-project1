@@ -14,7 +14,8 @@ class Form extends React.Component {
     };
   }
   componentWillMount() {
-    var name = this.props.location.pathname.slice(11);
+    var name = this.props.location.pathname.slice(17);
+    console.log(name)
     localStorage.getItem("jwt-token") ? (
       fetch(`http://localhost:3001/api/forms/${name}`)
         .then(data => data.json())

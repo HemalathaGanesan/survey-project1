@@ -39,7 +39,7 @@ class Dashboard extends Component {
                       <p className="card-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
                         standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it
                         to make a type specimen book</p>
-                      <NavLink to={`dashboard/${formName}`} className="btn btn-primary">Go to Survey</NavLink>
+                      <NavLink to={`dashboard/form/${formName}`} className="btn btn-primary">Go to Survey</NavLink>
                     </div>
                   </div>
                 </div>
