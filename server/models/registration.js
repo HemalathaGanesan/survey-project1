@@ -7,8 +7,7 @@ const registrationSchema = mongoose.Schema({
     required: true
   },
   password: {
-    type: String,
-    required: true
+    type: String
   },
   googleId: String,
   hospital: String,
