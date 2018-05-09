@@ -45,7 +45,6 @@ class Registration extends Component {
       method: 'POST'
     }).then(res => res.json())
       .then(data => {
-        console.log(data)
         if (data.success) {
           this.setState({ mailExistMsg: data.message })
           setTimeout(() => this.setState({ mailExistMsg: "" }), 5000);
@@ -97,7 +96,7 @@ class Registration extends Component {
         <div className="row">
           <div className="col"></div>
           <div className="col-md-6">
-            <div className="card border-dark card-registraion">
+            <div className="card border-dark">
               <h4 className="card-header">Registration</h4>
               <div className="card-body">
 
@@ -140,9 +139,9 @@ class Registration extends Component {
                 </form>
 
               </div>
-            </div><br />
+            </div>
             <p>Already have account? Login <Link to="/"> Here</Link></p>
-            <p>Register with <a href="http://localhost:3001/api/registration/auth/google"><button className="btn fa fa-google-plus"> Google</button></a></p>
+            <p>Register with <a href="http://localhost:3001/api/registration/auth/google"><button className="btn fa fa-google button-google"> Google</button></a></p>
             {this.state.mailExistMsg && <div className="alert alert-danger" role="alert">{this.state.mailExistMsg}</div>}
             {this.state.succesMsg && <div className="alert alert-success" role="alert">{this.state.succesMsg}</div>}
           </div>

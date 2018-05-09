@@ -1,60 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const Survey = require('../models/survey')
-const Surveyform = require('../models/surveyForm')
+const login = require('../models/login.js');
+const registration = require('../models/registration.js');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../config/keys');
 const sample = require('../../src/sample.json')
-const db = require('mongodb').Db;
+
+
 
 // get request
-router.get('/formname', verifyToken, function (req, res) {
-  jwt.verify(req.token, config.secretKey, (err, authData) => {
-    if (err) {
-      res.status(403).json({
-        success: true,
-        message: "token expired"
-      })
-    } else {
-      Surveyform.find()
-        .then((data) => {
-          var ids = data.map((value) => {
-            return value._id;
-          })
-          res.status(200).send(ids)
-        })
-    }
-  })
+router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+  res.send("welcome to dashboad get req from server")
 });
-
-router.get('/forms/:id', verifyToken, function (req, res) {
-  jwt.verify(req.token, config.secretKey, (err, authData) => {
-    if (err) {
-      res.status(403).json({
-        success: true,
-        message: "token expired"
-      })
-    } else {
-      var form = req.params.id;
-      Surveyform.aggregate([
-        {
-          $match: {
-            _id: form
-          }
-        },
-        {
-          $project: {
-            _id: 0,
-          }
-        }
-      ]).then((data) => {
-        res.status(200).send(data[0])
-      })
-    }
-  })
-
-})
 
 // post request
 router.post("/survey", verifyToken, function (req, res) {
@@ -131,5 +89,6 @@ function verifyToken(req, res, next) {
     res.sendStatus(403);
   }
 }
+
 
 module.exports = router;

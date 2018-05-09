@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { NavLink } from "react-router-dom";
 import sample from '../sample.json'
+import jwt from 'jsonwebtoken';
+import { BrowserRouter as Router, Route, NavLink } from "react-router-dom";
 
 
 class Dashboard extends Component {
@@ -53,11 +55,13 @@ class Dashboard extends Component {
           }
         })
         .catch(err => console.log(err)))
-  }
 
+  }
   removeToken() {
     localStorage.removeItem("jwt-token");
     document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    // sessionStorage.removeItem("jwt-token");
+    // res.clearCookie("key");
     window.location.reload();
   }
 
@@ -88,6 +92,7 @@ class Dashboard extends Component {
     else {
       forms = <img src="https://i.pinimg.com/originals/ac/44/71/ac4471291c620d8dd47697a1d8da4975.gif"></img>
     }
+    console.log("token", jwt.decode(localStorage.getItem('jwt-token')))
 
     return (
       <div>
