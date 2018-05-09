@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { NavLink } from "react-router-dom";
+import sample from '../sample.json'
 
 
 class Dashboard extends Component {
@@ -8,10 +9,22 @@ class Dashboard extends Component {
     super();
     this.state = {
       data: [],
-      dataPresent: false
+      dataPresent: false,
+      storeForm:false
     }
   }
-  componentDidMount() {
+  componentWillMount() {
+    // console.log(sample)
+    (fetch('http://localhost:3001/api/dashboard/store',{
+      method: 'POST',
+      body: JSON.stringify(sample),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+    }).then(res=>res.json())
+    .catch(err=> console.log(err)))
+
+
     localStorage.getItem('jwt-token') && (
       fetch('http://localhost:3001/api/dashboard/formname', {
         method: 'GET',
@@ -38,8 +51,9 @@ class Dashboard extends Component {
   }
 
   render() {
+    var forms
     if (this.state.dataPresent) {
-      var forms = (this.state.data).map((formName, idx) => {
+       forms = (this.state.data).map((formName, idx) => {
         return (
           <div key={idx}>
             <div className="form-field">
@@ -59,6 +73,9 @@ class Dashboard extends Component {
             </div>
           </div>)
       })
+    }
+    else{
+      forms=<img src="https://i.pinimg.com/originals/ac/44/71/ac4471291c620d8dd47697a1d8da4975.gif"></img>
     }
 
     return (

@@ -32,7 +32,7 @@ router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) 
   // console.log("req.user", req.user);
   if (req.user.hospital) {
     let token = jwt.sign(req.user.toJSON(), config.secretKey, {
-      expiresIn: "20s"
+      expiresIn: "1h"
     });
     res.cookie('jwt', token);
     res.redirect(`http://localhost:3000/registerWithGoogle/`);
@@ -136,7 +136,7 @@ router.put('/:userId', (req, res) => {
               .then(result => {
                 // console.log("result", result)
                 let token = jwt.sign(result.toJSON(), config.secretKey, {
-                  expiresIn: "20s"
+                  expiresIn: "1h"
                 });
                 // res.cookie('jwt', token);
                 res.status(201).json({

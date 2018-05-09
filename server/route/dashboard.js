@@ -5,6 +5,8 @@ const Surveyform = require('../models/surveyForm')
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../config/keys');
+const sample = require('../../src/sample.json')
+const db = require('mongodb').Db;
 
 // get request
 router.get('/formname', verifyToken, function (req, res) {
@@ -80,20 +82,27 @@ router.post("/survey", verifyToken, function (req, res) {
 });
 
 router.post('/store', function (req, res) {
-  var data = req.body;
-  Surveyform.create({ _id: 'sample', form: data })
-    .then(() => {
+  console.log(req.body._id)
+  if(Surveyform.find({_id:req.body._id})){
+    console.log("inside if",db);
+    res.send({
+      success:false
+    })
+  } 
+    console.log("inside else")
+  Surveyform.create(req.body)
+    .then((data) => {
       res.status(201).send({
-        status: 'success'
+        success:true,
       })
     })
     .catch(err => {
+      console.log(err)
       res.status(500).send({
-        status: 'failure'
+        success:false
       })
-    })
+    })   
 })
-
 function verifyToken(req, res, next) {
   const bearerHeader = req.headers['authorization'];
   if (typeof bearerHeader !== "undefined") {
