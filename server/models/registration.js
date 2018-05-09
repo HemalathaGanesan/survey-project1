@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 // reg. schema
 const registrationSchema = mongoose.Schema({
+  _id:String,
   email: {
     type: String,
     required: true

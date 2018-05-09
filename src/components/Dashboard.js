@@ -4,8 +4,6 @@ import { NavLink } from "react-router-dom";
 import sample from '../sample.json'
 import jwt from 'jsonwebtoken';
 
-
-
 class Dashboard extends Component {
   constructor() {
     super();
@@ -17,7 +15,6 @@ class Dashboard extends Component {
   }
 
   componentWillMount() {
-    // console.log(sample)
     (fetch('http://localhost:3001/api/dashboard/store', {
       method: 'POST',
       body: JSON.stringify(sample),
@@ -26,9 +23,9 @@ class Dashboard extends Component {
         'Content-Type': 'application/json'
       }),
     }).then(res => {
-      this.initalPage()
       res.json()
     }).then(name => {
+      this.initalPage()
       console.log(name)
       if (name.success) {
         localStorage.removeItem("jwt-token");

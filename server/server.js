@@ -56,8 +56,7 @@ app.use(cookieParser())
 // use routes
 app.use('/api/registration', require('./route/registration.js'));
 app.use('/api/login', require('./route/login.js'));
-// app.use('/api/dashboard', require('./route/dashboard.js'));
-app.use("/api", require("./route/api"))
+app.use('/api/dashboard', require('./route/dashboard.js'));
 
 
 // hadling errors

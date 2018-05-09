@@ -8,7 +8,6 @@ import VerifyUser from './components/VerifyUser';
 import Dashboard from './components/Dashboard';
 import ErrorPage from './components/ErrorPage'
 import Form from "./components/Form";
-import VerifyToken from './components/VerifyToken';
 import UserDetails from './components/UserDetails';
 import './App.css';
 
@@ -27,7 +26,6 @@ class App extends Component {
           <Route path="/verifyUser/:userId" exact render={({ match }) => (
             <VerifyUser userId={match.params.userId} />
           )} />
-          <Route path="/verifyToken" exact component={VerifyToken} />
           <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/dashboard/:forms" exact component={UserDetails} />
           <Route path="/dashboard/form/:form" exact component={Form} />
