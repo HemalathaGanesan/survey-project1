@@ -3,23 +3,21 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const registration = require('../models/registration.js');
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
-const config = require('../config/keys');
+const passport = require('passport')
+const jwt = require('jsonwebtoken')
+const config = require('../config/keys')
 
 // get request
-router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/', (req, res) => {
   registration.find({})
-    .then(data => res.status(200).json(data))
-    .catch(err => res.status(500).json({ error: err }))
+    .then(data => res.json(data))
 });
 
-router.get('/:userId', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/:userId', (req, res) => {
   registration.find({ _id: req.params.userId })
     .then(result => {
-      res.status(200).json(result)
+      res.json(result)
     })
-    .catch(err => res.status(500).json({ error: err }))
 });
 
 // google authantication
@@ -32,7 +30,7 @@ router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) 
   // console.log("req.user", req.user);
   if (req.user.hospital) {
     let token = jwt.sign(req.user.toJSON(), config.secretKey, {
-      expiresIn: "20s"
+      expiresIn: "1h"
     });
     res.cookie('jwt', token);
     res.redirect(`http://localhost:3000/registerWithGoogle/`);
@@ -42,13 +40,14 @@ router.get('/auth/google/redirect', passport.authenticate('google'), (req, res) 
   }
 })
 
+
 // post request
 router.post('/', (req, res) => {
   registration.find({ email: req.body.email })
     .then(user => {
-      // console.log(user);
+      console.log(user)
       if (user.length >= 1) {
-        return res.status(400).json({
+        return res.json({
           message: "Mail already exists",
           success: true
         });
@@ -57,7 +56,7 @@ router.post('/', (req, res) => {
         bcrypt.genSalt(10, function (err, salt) {
           bcrypt.hash(req.body.password, salt, function (err, hash) {
             if (err) {
-              return res.status(500).json({
+              return res.json({
                 error: err
               })
             } else {
@@ -69,14 +68,13 @@ router.post('/', (req, res) => {
               })
               register.save()
                 .then(result => {
-                  // console.log("result", result)
-                  
                   // send confirmation mail 
                   const url = `http://localhost:3000/verifyUser/${result._id}`;
                   const mailAccount = {
                     user: 'test.skiploop@gmail.com',
                     password: 'Test@123',
                   }
+
                   nodemailer.createTestAccount((err, account) => {
                     let transporter = nodemailer.createTransport({
                       host: 'smtp.gmail.com',
@@ -87,19 +85,17 @@ router.post('/', (req, res) => {
                         pass: mailAccount.password
                       }
                     });
+
                     let mailOptions = {
-                      from: `"Confirm Email" <${mailAccount.user}>`,
+                      from: `"Confirm mail" <${mailAccount.user}>`,
                       to: req.body.email,
-                      subject: 'Confirm Your Email',
-                      html: `Hello !!<br/>Please click this link to confirm your email: <a href="${url}">${url}</a>`,
+                      subject: 'Confirm Email',
+                      html: `Hello!! <br />Please click this link to confirm your email: <a href="${url}">${url}</a>`,
                     };
+
                     transporter.sendMail(mailOptions, (error, info) => {
                       if (error) {
-                        // return console.log(error);
-                        return res.status(500).json({ 
-                          error: error,
-                          message: "email can't be sent" 
-                        })
+                        return console.log(error);
                       }
                       console.log('Message sent: %s', info.messageId);
                       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
@@ -107,49 +103,47 @@ router.post('/', (req, res) => {
                       // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
                     });
                   })
-                  res.status(201).json({
+                  res.json({
                     message: "Registered succesfully"
                   })
                 })
-                .catch(err => res.status(500).json({ error: err }))
+                .catch(err => res.json({ error: err }))
             }
           });
         });
       }
     })
-    .catch(err => res.status(500).json({ error: err }))
 });
 
 // put request
-router.put('/:userId', (req, res) => {
+router.put('/:userId', (req, resp) => {
   registration.findOne({ _id: req.params.userId })
     .then(data => {
       if (data.hospital) {
-        res.status(400).json({
+        resp.json({
           message: "Failed, hospital already updated",
           success: false
         })
       } else {
         registration.findByIdAndUpdate({ _id: req.params.userId }, req.body)
           .then(() => {
-            registration.findOne({ hospital: req.body.hospital })
+            registration.findOne({ _id: req.params.userId })
               .then(result => {
                 // console.log("result", result)
                 let token = jwt.sign(result.toJSON(), config.secretKey, {
-                  expiresIn: "20s"
+                  expiresIn: "1h"
                 });
-                // res.cookie('jwt', token);
-                res.status(201).json({
+                // resp.cookie('jwt', token);
+                resp.json({
                   message: "Account updated, Wait.. Redirecting to Login page",
                   success: true,
                   token: token
                 })
               })
-              .catch(err => res.status(500).json(err))
           })
       }
     })
-    .catch(err => res.status(500).json(err))
+    .catch(err => resp.json(err))
 })
 
 router.put('/verifyUser/:userId', (req, res) => {
@@ -159,21 +153,20 @@ router.put('/verifyUser/:userId', (req, res) => {
       if (result.isVerified === false) {
         registration.findByIdAndUpdate({ _id: req.params.userId }, { isVerified: true })
           .then(updatedResult => {
-            // console.log("updatedresult", updatedResult);
-            res.status(200).json({
-              message: "User verified susscfully",
-              success: true
-            })
+            // console.log("updatedresult", updatedResult)
           })
-          .catch(err => res.status(500).json({ error: err }))
+        res.json({
+          message: "User verifed susscfully",
+          success: true
+        })
       } else {
-        res.status(401).json({
-          message: "Already verified",
+        res.json({
+          message: "User already verifed",
           success: false
         })
       }
     })
-    .catch(err => res.status(500).json({ error: err }))
+    .catch(err => res.json({ error: err }))
 })
 
 module.exports = router;

@@ -15,13 +15,13 @@ router.post('/', (req, res) => {
   registration.findOne({ email: req.body.email })
     .then(result => {
       if (!result) {
-        res.status(404).json({
+        res.send({
           succes: false,
           message: 'Authentication failed. User not found'
         })
       }
       else if (!result.isVerified) {
-        res.status(401).json({
+        res.send({
           succes: false,
           message: 'Email not verified, Verify your email to Login'
         })
@@ -29,14 +29,16 @@ router.post('/', (req, res) => {
         bcrypt.compare(req.body.password, result.password, function (err, resp) {
           // resp == true || fasle
           if (resp) {
-            let token = jwt.sign(result.toJSON(), config.secretKey, { expiresIn: "10s" });
-            res.status(200).json({
+            let token = jwt.sign(result.toJSON(), config.secretKey, {
+              expiresIn: "1h"
+            });
+            res.json({
               success: true,
               message: 'Login succesfully',
               token: token
             });
           } else {
-            res.status(401).json({
+            res.json({
               success: false,
               message: 'Authentication failed. Password did not match'
             });
@@ -44,7 +46,7 @@ router.post('/', (req, res) => {
         });
       }
     })
-    .catch(err => res.status(500).json({ error: err }))
+    .catch(err => res.json({ error: err }))
 })
 
 module.exports = router;
