@@ -3,8 +3,6 @@ import { Redirect } from 'react-router-dom';
 import { NavLink } from "react-router-dom";
 import sample from '../sample.json'
 import jwt from 'jsonwebtoken';
-import { BrowserRouter as Router, Route, NavLink } from "react-router-dom";
-
 
 class Dashboard extends Component {
   constructor() {
@@ -15,8 +13,8 @@ class Dashboard extends Component {
       storeForm: false
     }
   }
+
   componentWillMount() {
-    // console.log(sample)
     (fetch('http://localhost:3001/api/dashboard/store', {
       method: 'POST',
       body: JSON.stringify(sample),
@@ -25,9 +23,9 @@ class Dashboard extends Component {
         'Content-Type': 'application/json'
       }),
     }).then(res => {
-      this.initalPage()
       res.json()
     }).then(name => {
+      this.initalPage()
       console.log(name)
       if (name.success) {
         localStorage.removeItem("jwt-token");
@@ -42,7 +40,7 @@ class Dashboard extends Component {
       fetch('http://localhost:3001/api/dashboard/formname', {
         method: 'GET',
         headers: new Headers({
-          'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
+          'Authorization': 'Bearer ' +localStorage.getItem('jwt-token'),
           'Content-Type': 'application/json'
         }),
       }).then(res => res.json())
@@ -55,7 +53,6 @@ class Dashboard extends Component {
           }
         })
         .catch(err => console.log(err)))
-
   }
   removeToken() {
     localStorage.removeItem("jwt-token");
@@ -79,8 +76,8 @@ class Dashboard extends Component {
                       <h5 className="card-title">{formName}</h5>
                       <p className="card-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
                         standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it
-                to make a type specimen book</p>
-                      <NavLink to={`dashboard/${formName}`} className="btn btn-primary">Go to Survey</NavLink>
+                        to make a type specimen book</p>
+                      <NavLink to={`/dashboard/${formName}`} className="btn btn-primary">Go to Survey</NavLink>
                     </div>
                   </div>
                 </div>

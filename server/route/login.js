@@ -29,15 +29,10 @@ router.post('/', (req, res) => {
         bcrypt.compare(req.body.password, result.password, function (err, resp) {
           // resp == true || fasle
           if (resp) {
-<<<<<<< HEAD
-            let token = jwt.sign(result.toJSON(), config.secretKey, { expiresIn: "1h" });
-            res.status(200).json({
-=======
             let token = jwt.sign(result.toJSON(), config.secretKey, {
               expiresIn: "1h"
             });
             res.json({
->>>>>>> 6dace30b376c17afcc8bfbb9a025d6b4b6cc17b2
               success: true,
               message: 'Login succesfully',
               token: token
