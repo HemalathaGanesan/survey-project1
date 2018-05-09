@@ -81,27 +81,44 @@ router.post("/survey", verifyToken, function (req, res) {
   })
 });
 
-router.post('/store', function (req, res) {
+router.post('/store', verifyToken, function (req, res) {
   console.log(req.body._id)
-  if(Surveyform.find({_id:req.body._id})){
-    console.log("inside if",db);
-    res.send({
-      success:false
-    })
-  } 
-    console.log("inside else")
-  Surveyform.create(req.body)
-    .then((data) => {
-      res.status(201).send({
-        success:true,
+  jwt.verify(req.token, config.secretKey, (err, authData) => {
+    if (err) {
+      res.status(403).json({
+        success: true,
+        message: "token expired"
       })
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).send({
-        success:false
-      })
-    })   
+    } else {
+      Surveyform.find({ _id: req.body._id })
+        .then(data => {
+          console.log(data)
+          if (data.length === 0) {
+            console.log("inside data if")
+            Surveyform.create(req.body)
+              .then((data) => {
+                res.status(201).send({
+                  success: true,
+                })
+              })
+              .catch(err => {
+                console.log(err)
+                res.status(500).send({
+                  success: false
+                })
+              })
+          }
+          else {
+            maindata = true;
+            console.log("inside data else");
+            console.log("maindata if");
+            res.send({
+              success: true
+            })
+          }
+        })
+    }
+  })
 })
 function verifyToken(req, res, next) {
   const bearerHeader = req.headers['authorization'];
