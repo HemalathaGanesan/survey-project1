@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import { NavLink } from "react-router-dom";
+import sample from '../sample.json'
 import jwt from 'jsonwebtoken';
 import { NavLink } from "react-router-dom";
 
@@ -9,13 +11,51 @@ class Dashboard extends Component {
     super();
     this.state = {
       data: [],
-      dataPresent: false
+      dataPresent: false,
+      storeForm: false
     }
   }
-  componentDidMount() {
-    fetch('http://localhost:3001/api/formnames').then(res => res.json()).then(name => {
-      this.setState({ data: name, dataPresent: true })
+  componentWillMount() {
+    // console.log(sample)
+    (fetch('http://localhost:3001/api/dashboard/store', {
+      method: 'POST',
+      body: JSON.stringify(sample),
+      headers: new Headers({
+        'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
+        'Content-Type': 'application/json'
+      }),
+    }).then(res => {
+      this.initalPage()
+      res.json()
+    }).then(name => {
+      console.log(name)
+      if (name.success) {
+        localStorage.removeItem("jwt-token");
+        window.location.href = "/verifyToken";
+      }
     })
+      .catch(err => console.log(err)))
+  }
+
+  initalPage = () => {
+    localStorage.getItem('jwt-token') && (
+      fetch('http://localhost:3001/api/dashboard/formname', {
+        method: 'GET',
+        headers: new Headers({
+          'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
+          'Content-Type': 'application/json'
+        }),
+      }).then(res => res.json())
+        .then(name => {
+          if (name.success) {
+            localStorage.removeItem("jwt-token");
+            window.location.href = "/verifyToken";
+          } else {
+            this.setState({ data: name, dataPresent: true });
+          }
+        })
+        .catch(err => console.log(err)))
+
   }
   removeToken() {
     localStorage.removeItem("jwt-token");
@@ -26,8 +66,9 @@ class Dashboard extends Component {
   }
 
   render() {
+    var forms
     if (this.state.dataPresent) {
-      var forms = (this.state.data).map((formName, idx) => {
+      forms = (this.state.data).map((formName, idx) => {
         return (
           <div key={idx}>
             <div className="form-field">
@@ -48,7 +89,11 @@ class Dashboard extends Component {
           </div>)
       })
     }
+    else {
+      forms = <img src="https://i.pinimg.com/originals/ac/44/71/ac4471291c620d8dd47697a1d8da4975.gif"></img>
+    }
     console.log("token", jwt.decode(localStorage.getItem('jwt-token')))
+
     return (
       <div>
         {(localStorage.getItem('jwt-token')) ?
