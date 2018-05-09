@@ -35,11 +35,18 @@ class Form extends React.Component {
         })
         .catch(err => console.log(err))))
   }
+  formateDate() {
+    let dateObj = new Date();
+    let dateString = JSON.stringify(dateObj);
+    let date = dateString.slice(1, 11);
+    return date;
+  }
   sendDataToServer(survey) {
     let formData = {
       title: this.state.title,
       email: jwt.decode(localStorage.getItem('jwt-token')).email,
       hospital: jwt.decode(localStorage.getItem('jwt-token')).hospital,
+      date:this.formateDate(),
       field: survey.data
     }
     fetch("http://localhost:3001/api/dashboard/survey", {
