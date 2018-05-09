@@ -16,7 +16,7 @@ class Dashboard extends Component {
       fetch('http://localhost:3001/api/dashboard/formname', {
         method: 'GET',
         headers: new Headers({
-          'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
+          'Authorization': 'Bearer ' +localStorage.getItem('jwt-token'),
           'Content-Type': 'application/json'
         }),
       }).then(res => res.json())

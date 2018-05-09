@@ -7,7 +7,8 @@ import RegisterWithGoogle from './components/RegisterWithGoogle';
 import VerifyUser from './components/VerifyUser';
 import Dashboard from './components/Dashboard';
 import Form from "./components/Form";
-import VerifyToken from './components/VerifyToken'
+import VerifyToken from './components/VerifyToken';
+import UserDetails from './components/UserDetails';
 import './App.css';
 
 class App extends Component {
@@ -27,15 +28,13 @@ class App extends Component {
           )} />
           <Route path="/verifyToken" exact component={VerifyToken} />
           <Route path="/dashboard" exact component={Dashboard} />
-          {/* <Route path="/dashboard/:forms" exact render={({ match }) => (
-            <Form forms={match.params.forms} />
-          )} /> */}
-          <Route path="/dashboard/:forms" exact component={Form} />
+          <Route path="/dashboard/:forms" exact component={UserDetails} />
+          <Route path="/dashboard/form/:form" exact component={Form} />
         </div>
       </Router>
     );
-  }
-}
+}  }
+
 
 export default App;
 

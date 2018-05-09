@@ -14,13 +14,12 @@ class Form extends React.Component {
     }
   }
   componentWillMount() {
-    var name = (this.props.location.pathname).slice(11);
-
+    var name = (this.props.location.pathname).slice(16);
     (localStorage.getItem('jwt-token') && (
       fetch(`http://localhost:3001/api/dashboard/forms/${name}`, {
         method: 'GET',
         headers: new Headers({
-          'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
+          'Authorization': 'Bearer '+ localStorage.getItem('jwt-token'),
           'Content-Type': 'application/json'
         }),
       }).then(data => data.json())
@@ -30,7 +29,7 @@ class Form extends React.Component {
             window.location.href = "/verifyToken";
           }
           else {
-            this.setState({ surveyJson: result.form, title: name })
+            this.setState({ surveyJson: result.form, title: result._id })
           }
         })
         .catch(err => console.log(err))))
@@ -53,7 +52,7 @@ class Form extends React.Component {
       method: "POST",
       body: JSON.stringify(formData),
       headers: new Headers({
-        'Authorization': 'Bearer' + ' ' + localStorage.getItem('jwt-token'),
+        'Authorization': 'Bearer '+ localStorage.getItem('jwt-token'),
         "Content-Type": "application/json"
       })
     }).then(data => data.json())
