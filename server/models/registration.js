@@ -2,13 +2,8 @@ const mongoose = require('mongoose');
 
 // reg. schema
 const registrationSchema = mongoose.Schema({
-  email: {
-    type: String,
-    required: true
-  },
-  password: {
-    type: String
-  },
+  email: String,
+  password: String,
   googleId: String,
   hospital: String,
   isVerified: {

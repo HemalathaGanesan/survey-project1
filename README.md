@@ -46,9 +46,6 @@ https://reactjs.org/
 ```bash
 $ npm start
 ```
-## To get Sample survey form
-Go to ./src/sample.json
-Copy the data present in sample.json and paste it in surveyform collection which is present in survey database.
 
 ## People
 [Dakaraja](https://gitlab.com/daka.raja),
