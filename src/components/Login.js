@@ -15,8 +15,7 @@ class Login extends Component {
     let data = {
       email: this.refs.email.value,
       password: this.refs.password.value,
-    }
-    // console.log(data)
+    };
 
     this.props.dispatch({
       type: 'LOGIN_DATA',
@@ -25,30 +24,8 @@ class Login extends Component {
         password: this.refs.password.value
       }
     });
-    // this.getReq(data);
     this.postReq(data);
   }
-
-  // getReq(data) {
-  //   // console.log(data)
-  //   fetch(`http://localhost:3001/api/registration/${data.email}`, {
-  //     headers: new Headers({
-  //       'Content-Type': 'application/json'
-  //     }),
-  //     method: 'GET'
-  //   }).then(res => res.json())
-  //     .then(data => {
-  //       // console.log(data);
-  //       if (data[0].isVerified === false) {
-  //         this.setState({ isVerified: true })
-  //         setTimeout(() => this.setState({ isVerified: false }), 5000)
-  //       } else {
-  //         this.setState({ isVerified: false })
-  //         this.props.history.push('/dashboard')
-  //       }
-  //     })
-  //     .catch(error => console.log(error));
-  // }
 
   postReq(data) {
     fetch("http://localhost:3001/api/login/", {
@@ -59,10 +36,13 @@ class Login extends Component {
       method: 'POST'
     }).then(res => res.json())
       .then(data => {
+        console.log(data.token)
         if (data.success) {
           localStorage.setItem('jwt-token', data.token);
-          this.props.history.push("/dashboard");
-          this.refs.loginForm.reset();
+          this.setState({ isLoading: true })
+          setTimeout(() => {
+            window.location.href = "/dashboard"
+          }, 1500)
         } else {
           this.setState({ errorMsg: data.message })
           setTimeout(() => this.setState({ errorMsg: "" }), 5000);
@@ -77,7 +57,7 @@ class Login extends Component {
         <div className="row">
           <div className="col"></div>
           <div className="col-md-6">
-            <div className="card border-dark">
+            <div className="card border-dark login-card">
               <h4 className="card-header">Login</h4>
               <div className="card-body">
                 <form onSubmit={this.storeData.bind(this)} ref="loginForm">
@@ -93,12 +73,13 @@ class Login extends Component {
                       <input type="password" className="form-control" id="password" ref="password" placeholder="Password" required />
                     </div>
                   </div>
-                  <button type="submit" className="btn btn-primary">Login</button>
+                  <button type="submit" className="btn btn-primary">Login</button><br />
+                  {this.state.isLoading && <img className="w-25" src="https://cdn.dribbble.com/users/359314/screenshots/2379673/untitled-3.gif" alt="Cinque Terre" />}
                 </form>
               </div>
-            </div>
+            </div><br />
             <p>Dont't have account? Register <Link to="/registration"> Here</Link></p>
-            <p>Login with <a href="http://localhost:3001/api/registration/auth/google"><button className="btn fa fa-google button-google"> Google</button></a></p>
+            <p>Login with <a href="http://localhost:3001/api/registration/auth/google"><button className="btn fa fa-google-plus"> Google</button></a></p>
             {this.state.isVerified && <div className="alert alert-danger" role="alert">Mail not Verified</div>}
             {this.state.errorMsg && <div className="alert alert-danger" role="alert">{this.state.errorMsg}</div>}
           </div>
