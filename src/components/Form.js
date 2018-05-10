@@ -19,6 +19,7 @@ class Form extends React.Component {
     var name=(this.props.location.pathname).slice(11);
     {(localStorage.getItem('jwt-token')) ?
           (fetch(`http://localhost:3001/api/forms/${name}`).then(data=>data.json()).then((result)=>{
+            console.log(result)
             this.setState({surveyJson:result.form,title:name})
           })) : (<Redirect to="/" />)}
   }
@@ -28,10 +29,10 @@ class Form extends React.Component {
     let formData={
       title:this.state.title,
       email:userEmail,
-      hospital:this.props.hospital,
+      // hospital:this.props.hospital,
       field:survey.data
     }
-    console.log(this.state.hospital)
+    // console.log(this.state.hospital)
    fetch("http://localhost:3001/api/survey",{
      method:"POST",
      body:JSON.stringify(formData),
@@ -40,6 +41,7 @@ class Form extends React.Component {
      })
    }).then(data=>data.json())
    .then(result=>{
+     console.log(result)
    })
  };
   render() {

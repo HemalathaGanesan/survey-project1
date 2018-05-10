@@ -40,13 +40,13 @@ class RegisterWithGoogle extends Component {
       "hospital": this.refs.hospital.value
     }
     // console.log(data)
-    this.props.dispatch({
-      type: 'REGISTRATION_WITH_G_DATA',
-      payload: {
-        email: this.state.data.email,
-        hospital: this.refs.hospital.value
-      }
-    })
+    // this.props.dispatch({
+    //   type: 'REGISTRATION_WITH_G_DATA',
+    //   payload: {
+    //     email: this.state.data.email,
+    //     hospital: this.refs.hospital.value
+    //   }
+    // })
     this.putReq(data);
   }
   putReq(data) {

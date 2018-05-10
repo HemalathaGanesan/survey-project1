@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 // reg. schema
 const registrationSchema = mongoose.Schema({
+  _id:String,
   email: String,
   password: String,
   googleId: String,

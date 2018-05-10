@@ -12,7 +12,7 @@ class Dashboard extends Component {
       dataPresent: false
     }
   }
-  componentDidMount() {
+  componentWillMount() {
     fetch('http://localhost:3001/api/formname').then(res => res.json()).then(name => {
       this.setState({ data: name, dataPresent: true })
     })

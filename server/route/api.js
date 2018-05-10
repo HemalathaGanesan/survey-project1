@@ -14,22 +14,27 @@ router.post("/survey",function(req,res){
         })
     })
     .catch(err=>{
+        console.log(err)
         res.send({
-            status:'failure'
+            status:'failure',
+            err
         })
     })
 })
 
 router.post('/store',function(req,res){
     var data=req.body;
-    Surveyform.create({_id:'sample',form:data}).then(()=>{
+    console.log(data.name)
+    Surveyform.create({_id:data.name,form:data}).then(()=>{
         res.send({
             status:'success'
         })
     })
     .catch(err=>{
         res.send({
-            status:'failure'
+            status:'failure',
+            err:"Duplicate form"
+            
         })
     })
 })
@@ -40,6 +45,11 @@ router.get('/formname',function(req,res){
             return value._id;
         })
         res.send(ids)
+    }).catch(err=>{
+        res.send({
+            err:"No forms are available"
+        })
+
     })
 })
 
