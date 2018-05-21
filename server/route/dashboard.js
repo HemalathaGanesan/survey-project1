@@ -1,20 +1,160 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const login = require('../models/login.js');
-const registration = require('../models/registration.js');
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
+const Survey = require("../models/survey");
+const Surveyform = require("../models/surveyForm");
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
+const config = require("../config/keys");
 
 // get request
-router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-  res.send("welcome to dashboad get req from server")
+router.get("/formname", verifyToken, function(req, res) {
+  jwt.verify(req.token, config.secretKey, (err, authData) => {
+    if (err) {
+      res.status(403).json({
+        success: true,
+        message: "token expired"
+      });
+    } else {
+      Surveyform.find().then(data => {
+        var ids = data.map(value => {
+          return value._id;
+        });
+        res.status(200).send(ids);
+      });
+    }
+  });
+});
+
+router.get("/forms/:id", verifyToken, function(req, res) {
+  console.log(req.params.id);
+  jwt.verify(req.token, config.secretKey, (err, authData) => {
+    if (err) {
+      res.status(403).json({
+        success: true,
+        message: "token expired"
+      });
+    } else {
+      var form = req.params.id;
+      Surveyform.aggregate([
+        {
+          $match: {
+            _id: form
+          }
+        }
+      ]).then(data => {
+        res.status(200).send(data[0]);
+      });
+    }
+  });
 });
 
 // post request
-router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const data = req.body;
-  // console.log('old', data)
-  res.send("welcome to dashboad post req from server")
+router.post("/survey", verifyToken, function(req, res) {
+  jwt.verify(req.token, config.secretKey, (err, authData) => {
+    if (err) {
+      res.status(403).json({
+        success: true,
+        message: "token expired"
+      });
+    } else {
+      var data = req.body;
+      Survey.create({ value: data })
+        .then(() => {
+          res.status(201).send({
+            status: "success"
+          });
+        })
+        .catch(err => {
+          res.status(500).send({
+            status: "failure"
+          });
+        });
+    }
+  });
+});
+
+router.post('/store', verifyToken, function (req, res) {
+  console.log(req.body._id)
+  jwt.verify(req.token, config.secretKey, (err, authData) => {
+    if (err) {
+      res.status(403).json({
+        success: true,
+        message: "token expired"
+      })
+    } else {
+      Surveyform.find({ _id: req.body._id })
+        .then(data => {
+          console.log(data)
+          if (data.length === 0) {
+            console.log("inside data if")
+            Surveyform.create(req.body)
+              .then((data) => {
+                res.status(201).send({
+                  success: true,
+                })
+              })
+              .catch(err => {
+                console.log(err)
+                res.status(500).send({
+                  success: false
+                })
+              })
+          }
+          else {
+            maindata = true;
+            console.log("inside data else");
+            console.log("maindata if");
+            res.send({
+              success: true
+            })
+          }
+        })
+    }
+  })
 })
+
+router.get("/user/:email/:form",verifyToken, function(req, res) {
+  jwt.verify(req.token, config.secretKey, (err, authData) => {
+    if (err) {
+      res.status(403).json({
+        success: true,
+        message: "token expired"
+      });
+    } else {
+      let email = req.params.email;
+      let form = req.params.form;
+      Survey.aggregate([
+        {
+          $match: { "value.email": email, "value.title": form }
+        },
+        {
+          $project: {
+            _id: 0
+          }
+        }
+      ]).then(data => {
+          res.send(data);
+        }).catch(err => {
+          res.status(500).send({
+            status: "failure"
+          });
+        });
+    }
+  });
+});
+
+function verifyToken(req, res, next) {
+  const bearerHeader = req.headers["authorization"];
+  if (typeof bearerHeader !== "undefined") {
+    const bearer = bearerHeader.split(" ");
+    const bearerToken = bearer[1];
+    req.token = bearerToken;
+    // console.log("req token send.....",req.token)
+    next();
+  } else {
+    res.sendStatus(403);
+  }
+}
+
 
 module.exports = router;

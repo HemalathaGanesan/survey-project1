@@ -40,7 +40,7 @@ class VerifyUser extends Component {
                 <h4 className="card-header">Email Verification</h4>
                 <div className="card-body">
                   <h1>{this.state.msg}</h1>
-                  <span>click <Link to="/login"> here</Link> to login</span>
+                  <span>click <Link to="/"> here</Link> to login</span>
                 </div>
               </div>
             </div>}

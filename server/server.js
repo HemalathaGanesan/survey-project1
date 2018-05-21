@@ -43,7 +43,7 @@ app.use(passport.session());
 // body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 // use cors
 app.use(cors())
@@ -56,8 +56,7 @@ app.use(cookieParser())
 // use routes
 app.use('/api/registration', require('./route/registration.js'));
 app.use('/api/login', require('./route/login.js'));
-// app.use('/api/dashboard', require('./route/dashboard.js'));
-app.use("/api", require("./route/api"))
+app.use('/api/dashboard', require('./route/dashboard.js'));
 
 
 // hadling errors
